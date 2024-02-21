@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + TS</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <img src="assets/images/vite.svg" alt="vite svg" srcset="" width="100">
+    <div class="svgmap" id="map">
+
+    </div>
+
+    <script type="module">
+      import {ClientSVGEditorNG} from '../src/clientSVGMap';
+      import {dataShops2} from './js/dataitems.ts';
+      const getSvgNode = () => {
+        return document.getElementById('map');
+      }
+      function gotoURLClick(dataelement) {
+        console.log('gotoURLClick element = ', dataelement)
+        //const geturl = dataelement.getAttribute('data-url')
+
+        window.open(dataelement.slug, '_self')
+      }
+
+      const MapTheme = {
+        colorBG: '#fff',
+        colorItem: {
+          colorBG: '#222',
+          colorBorder: '#000',
+          colorBGActive: '#f22',
+          colorBorderActive: '#000',
+          opacity: 0.5,
+          opacityActive: 1
+        },
+        borderItem: {
+          isBorder: true,
+          widthBorder: 3
+        },
+      }
+      const svgEditor = new ClientSVGEditorNG(
+         getSvgNode(),
+         'assets/images/vite.svg',
+         dataShops2,
+         {
+            title: 'TITLE MAP',
+            colorBG: "#fff",
+            idInteractiveLayer: 'interactive',
+            isRemoveUnuseItem: false,
+            isHoverEnable: true,
+            funcClick: gotoURLClick,
+            funcParams: 'https://www.google.com',
+            mapTheme: MapTheme,
+            isCustomBalloon: false,
+        }
+        
+      );
+      svgEditor.DEBUG = true;
+      svgEditor.init();
+      setTimeout(() => {
+        svgEditor.setOptions({
+          width: '50%',
+          height: '100%'
+        });
+        svgEditor.insertFromFile('assets/images/map/Shelkovsky-float-0.svg')
+        .then((res) => {
+          console.log('insertFromFile res = ', res)
+          svgEditor.setOptions();
+          svgEditor.setInteractiveLayer();
+        });
+      }, 2000);
+    </script>
+  </body>
+</html>
