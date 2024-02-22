@@ -17,7 +17,8 @@
     "publish": "changeset publish",
     "preview": "vite preview",
     "ci": "npm run lint && npm run test && npm run build1",
-    "release": "npm run lint && npm run test && npm run build1 && changeset publish"
+    "release": "npm run lint && npm run test && npm run build1 && changeset publish",
+    "release2": "npm run build1 && changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
