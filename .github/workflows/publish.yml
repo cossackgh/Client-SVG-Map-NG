@@ -1,0 +1,32 @@
+name: Publish to NPM
+
+concurrency:
+  group: production
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - main # Set a branch name to trigger deployment
+jobs:
+    publish:
+        name: publish to NPM # A name for the publish job
+        runs-on: ubuntu-latest # The type of machine to
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3 # Checkout the code in the repository
+            - name: Set up Node.js
+              uses: actions/setup-node@v3 # Set up Node.js
+              with:
+                node-version: 20.x # The version of Node.js to use
+                cache: 'npm' # Cache the NPM packages
+            - name: Install dependencies
+              run: npm install # Install the dependencies
+            - name: Create Release Pull Request or Publish
+              id: changesets
+              uses: changesets/action@v1
+              with: 
+                publish: npm run release # Publish the package to NPM
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

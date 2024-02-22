@@ -33,8 +33,8 @@
           colorBorder: '#000',
           colorBGActive: '#f22',
           colorBorderActive: '#000',
-          opacity: 0.5,
-          opacityActive: 1
+          opacity: 0.1,
+          opacityActive: 0.7
         },
         borderItem: {
           isBorder: true,
@@ -61,14 +61,17 @@
       svgEditor.DEBUG = true;
       svgEditor.init();
       setTimeout(() => {
-        svgEditor.setOptions({
+/*         svgEditor.setOptions({
           width: '50%',
           height: '100%'
-        });
+        }); */
         svgEditor.insertFromFile('assets/images/map/Shelkovsky-float-0.svg')
         .then((res) => {
           console.log('insertFromFile res = ', res)
-          svgEditor.setOptions();
+/*           svgEditor.setOptions({
+
+            mapTheme:  MapTheme
+          }); */
           svgEditor.setInteractiveLayer();
         });
       }, 2000);

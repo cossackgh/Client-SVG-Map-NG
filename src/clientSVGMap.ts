@@ -2,21 +2,23 @@
 /**
  * Represents a client SVG editor.
  */
+import { Balloon } from './baloon.ts';
 import { logger } from './logger.ts';
 import type {
+
   DataInteractive,
   DataOptions,
   //MapTheme,
   BalloonOptions,
-  CastomBalloonOptions,
-  BalloonTheme,
+  //CastomBalloonOptions,
+  //BalloonTheme,
 } from './models/base.models'
 export class ClientSVGEditorNG{
     
      options: any;
      public DEBUG: boolean = false;
      public log = logger;
-     
+     nodeBallon!: Balloon;
     /**
      * The constructor for the client SVG map.
      * @param node - The HTML element that will contain the SVG map.
@@ -26,7 +28,7 @@ export class ClientSVGEditorNG{
      *  
      **/
 
-    constructor(private node: HTMLElement, private urlsvg: string, private dataItems: DataInteractive, options: DataOptions){
+    constructor(private node: HTMLElement, private urlsvg: string, private dataItems: DataInteractive[], options: DataOptions){
       this.log(this.DEBUG,"constructor",node);
       this.node = node;
       this.urlsvg = urlsvg;
@@ -50,19 +52,178 @@ export class ClientSVGEditorNG{
 
         this.insertFromFile(this.urlsvg).then(() => {
           this.log(this.DEBUG,"init() insertFromFile",this.urlsvg);
-          this.setOptions();
+          //this.setOptions();
           this.setInteractiveLayer();
+          // Create a balloon
+          if (!isMobile()) {
+            this.nodeBallon = this.createBalloon(
+              {
+                title: 'TITLE',
+                description: 'DESCRIPTION',
+                image: 'IMAGE',
+                balloonTheme: {
+                  colorBG: '#000000',
+                  colorTitle: '#ffffff',
+                  colorDescription: '#ffffff',
+                  isPositionFixed: false,
+                  borderWidth: '2px',
+                  borderColor: '#556699',
+                  top: 0,
+                  left: 0,
+                }
+              }
+            )
+          }
+
         })
         
     }
 
+    /**
+     * Handles the click event for a path element.
+     * @param e - The click event.
+     * @returns void
+     */
+    public onPathClick = (e: any) => {
+      this.log(this.DEBUG,"onPathClick e",e);
+      const path = e.target
+      this.log(this.DEBUG,"onPathClick path",path);
+      const id = path.id
+      this.log(this.DEBUG,"onPathClick id",id);
+      const item = this.dataItems.find((item) => item.id === id)
+      this.log(this.DEBUG,"onPathClick item",item);
+      if (item) {
+        this.log(this.DEBUG,"onPathClick item",item);
+        this.showBalloon(item)
+      }
+    }
+    /**
+     * Handles the mouseover event for a path element.
+     * @param e - The mouseover event.
+     * @returns void
+     */
+    public onPathMouseOver = (e: any) => {
+      this.log(this.DEBUG,"onPathMouseOver e",e);
+      const path = e.target
+      this.log(this.DEBUG,"onPathMouseOver path",path);
+      if (path.tagName !== 'g') {
+        (path as SVGElement).setAttribute('fill', this.options.mapTheme.colorItem.colorBGActive);
+        (path as SVGElement).setAttribute('opacity', this.options.mapTheme.colorItem.opacityActive);
+      }
+      const id = path.id
+      this.log(this.DEBUG,"onPathMouseOver id",id);
+      const item = this.dataItems.find((item) => item.idmap === id)
+      this.log(this.DEBUG,"onPathMouseOver item",item);
+      if (item) {
+        this.log(this.DEBUG,"onPathMouseOver item",item);
 
+        this.showBalloon(item)
+      }
+    }
+    /**
+     * Handles the mouseout event for a path element.
+     * @param e - The mouseout event.
+     * @returns void
+     */
+    public onPathMouseOut = (e: any) => {
+      //this.log(this.DEBUG,"onPathMouseOut e",e);
+      const path = e.target
+     // this.log(this.DEBUG,"onPathMouseOver path",path);
+      if (path.tagName !== 'g') {
+        (path as SVGElement).setAttribute('fill', this.options.mapTheme.colorItem.colorBG);
+        (path as SVGElement).setAttribute('opacity', this.options.mapTheme.colorItem.opacity);
+      }
+      this.hideBalloon()
+    }
+    /**
+     * Shows a balloon for a path element.
+     * @param item - The data item for the path element.
+     * @returns void
+     */
+    public showBalloon = (item: DataInteractive) => {
+      this.log(this.DEBUG,"showBalloon item",item);
+      this.log(this.DEBUG,"showBalloon this.nodeBallon",this.nodeBallon);
+      if (this.nodeBallon) {
+        this.nodeBallon.show()
+        this.nodeBallon.render({title: item.title, description: item.description})
+      }
+    }
+    /**
+     * Hides the balloon.
+     * @returns void
+     */
+    public hideBalloon = () => {
+      if (this.nodeBallon) {
+        this.nodeBallon.hide()
+      }
+    }
+    /**
+     * Sets the interactive layer for the client SVG map.
+     * @returns void
+     */
     public setInteractiveLayer = () => {
       this.log(this.DEBUG,"setInteractiveLayer this.node",this.node);
-        const interactiveLayer = document.getElementById(this.options.idInteractiveLayer)
+        const interactiveLayer = document.querySelector('#'+this.options.idInteractiveLayer)
         this.log(this.DEBUG,"setInteractiveLayer interactiveLayer",interactiveLayer);
         if (interactiveLayer) {
+          //let allElements = interactiveLayer.querySelectorAll(':scope > *:not(g)');
+          let elementsOnly = interactiveLayer.querySelectorAll(':scope > *:not(g)');
+          let allElements = interactiveLayer.querySelectorAll('*');
+          this.log(this.DEBUG,"setInteractiveLayer allElements",allElements);
+          this.log(this.DEBUG,"setInteractiveLayer elementsOnly",elementsOnly);
+          this.log(this.DEBUG,"setInteractiveLayer isMobile",isMobile());
+          if (!isMobile()) {
+            interactiveLayer.addEventListener('mousemove', (e: any) => {
+              this.log(this.DEBUG,'mousemove ', {X: e.x, Y: e.y});
+              this.handleMousemove(e, this.nodeBallon, this.options!.isCustomBalloon!)
+      
+              //  throttle(handleMousemove(e,this.nodeBallon), 11200)
+            })
+          }
 
+
+            allElements.forEach((element) => {
+                  //this.log(this.DEBUG,"setInteractiveLayer element",element);
+                  if (element.tagName.toLowerCase() !== 'g' && element.closest('g') !== interactiveLayer) {
+
+                    return;
+                  }
+                  
+
+                    if (element.tagName !== 'g') {
+                      //this.log(this.DEBUG,"setInteractiveLayer element",element);
+                      (element as SVGElement).setAttribute('fill', this.options.mapTheme.colorItem.colorBG);
+                      (element as SVGElement).setAttribute('opacity', this.options.mapTheme.colorItem.opacity);
+                      //(element as SVGElement).style.opacity = this.options.mapTheme.colorItem.opacity;
+
+                    }
+                    
+                      (element as SVGElement).style.cursor = 'pointer'
+                      element.addEventListener('click', (e) => {
+                        const target = e.target as SVGElement; // Explicitly type the event target as SVGElement
+                        //this.log(this.DEBUG,"setInteractiveLayer click",e);
+                        if (target.tagName.toLowerCase() === 'g' || (target.closest('g') && target.closest('g') !== interactiveLayer)) {
+                          return;
+                          }
+                        this.onPathClick(e)
+                      })
+                      element.addEventListener('mouseover', (e) => {
+                        const target = e.target as SVGElement; // Explicitly type the event target as SVGElement
+                      this.log(this.DEBUG,"addEventListener target",target);
+                      if (target.tagName.toLowerCase() === 'g' || (target.closest('g') && target.closest('g') !== interactiveLayer)) {
+                        return;
+                        }
+
+                        this.onPathMouseOver(e)
+                      })
+                      element.addEventListener('mouseout', (e) => {
+                        const target = e.target as SVGElement; // Explicitly type the event target as SVGElement
+                        if (target.tagName.toLowerCase() === 'g' || (target.closest('g') && target.closest('g') !== interactiveLayer)) {
+                          return;
+                          }
+                        this.onPathMouseOut(e)
+                      })    
+            })
       }
       }
 
@@ -127,7 +288,108 @@ export class ClientSVGEditorNG{
     
         this.node.innerHTML = stringSVG
       }
+
+      /**
+       * Creates a balloon for the client SVG map.
+       * @param options - The options for the balloon.
+       * @returns The balloon.
+       */
+      private createBalloon = (options: BalloonOptions) => {
+        //  console.log('createBalloon options = ', options)
+/*         const balloonDom = document.createElement('div')
+        balloonDom.id = 'BalloonItem'
+        document.body.appendChild(balloonDom) */
+        let baloon = new Balloon(options)
+      
+        //  console.log('createBalloon document IF baloon.balloonDom = ', baloon.balloonDom)
+        if (baloon.balloonDom !== null) {
+          //baloon.delete();
+          baloon.render({title: 'TITLE', description: 'DESCRIPTION'});
+        } else {
+          if (baloon.themeBalloonOptions?.isPositionFixed) {
+            const balloonDom = document.createElement('div')
+            balloonDom.style.position = 'fixed'
+            balloonDom.style.top = baloon.themeBalloonOptions?.isPositionFixed
+              ? baloon.themeBalloonOptions.top + 'px'
+              : '0px'
+            balloonDom.style.left = baloon.themeBalloonOptions?.isPositionFixed
+              ? baloon.themeBalloonOptions.left + 'px'
+              : '0px'
+      
+            balloonDom.id = 'BalloonItem'
+            balloonDom.style.display = 'block'
+            balloonDom.style.zIndex = '999999'
+            document.body.appendChild(balloonDom)
+          } else {
+
+/*             const balloonDom = document.createElement('div')
+           const balloonTitle = document.createElement('div')
+
+            balloonDom.style.position = 'fixed'
+            balloonDom.style.top = '-20px'
+            balloonDom.style.left = '0px'
+            balloonDom.id = 'BalloonItem'
+            balloonDom.className = 'balloon'
+            balloonDom.style.display = 'block'
+            balloonDom.style.color = baloon.themeBalloonOptions?.colorTitle as string
+            balloonDom.style.backgroundColor = baloon.themeBalloonOptions?.colorBG as string
+            balloonDom.style.borderWidth = baloon.themeBalloonOptions?.borderWidth as string
+            balloonDom.style.borderColor = baloon.themeBalloonOptions?.borderColor as string
+            balloonDom.style.borderStyle = 'solid'
+            balloonDom.style.padding = '10px'
+            balloonDom.style.zIndex = '999999'
+            balloonDom.innerHTML = `EXAMPLE BALLOON`
+
+            balloonTitle.style.display = 'block'
+
+            document.body.appendChild(balloonDom)
+            balloonDom.appendChild(balloonTitle) */
+           // baloon.render({title: 'TITLE', description: 'DESCRIPTION'});
+          }
+      
+          //baloon.balloonDom = document.querySelector('#BalloonItem')
+          baloon.render({title: 'TITLE', description: 'DESCRIPTION'});
+          baloon.hide()
+        }
+        //  console.log('createBalloon document = ', baloon.balloonDom)
+        return baloon
+      }
+/*       private   getPositionScroll = (element: HTMLElement = this.node) => {
+        const scrollX = element.getBoundingClientRect().left
+        const scrollY = element.getBoundingClientRect().top
+
+        return { scrollX, scrollY }
+      } */
+      private  handleMousemove = (
+        position: { x: number; y: number },
+        baloon: any,
+        isCustomBalloon: boolean
+      ) => {
+        /*   console.log(`cursor ev =`, position);
+        console.log(`cursor : X= ${position.x} px : Y= ${position.y} px\n`);*/
+        // console.log(`cursor : baloon =`, baloon, ` \n`)
+        baloon.show()
+        this.log(this.DEBUG,'baloon.balloonDom = ', baloon.balloonDom);
+        const getWidthElement = isCustomBalloon
+          ? baloon.balloonDom.offsetWidth
+          : baloon.balloonDom.offsetWidth
+        this.log(this.DEBUG,'getWidthElement = ', getWidthElement);
+        this.log(this.DEBUG,'baloon.themeBalloonOptions = ', baloon.themeBalloonOptions);
+        //  console.log(`cursor : baloon =`, getWidthElement, ` \n`)
+        if (!baloon.themeBalloonOptions?.isPositionFixed) {
+          baloon.balloonDom!.style.transform = `translate(${
+            position.x - getWidthElement / 2 - baloon.themeBalloonOptions.left
+          }px, ${position.y - 40 - baloon.themeBalloonOptions.top}px)`
+        } else {
+
+          baloon.balloonDom!.style.transform = `translate(${
+            position.x - getWidthElement / 2
+          }px, ${position.y - 40}px)`
+        }
+      }
+
 }
+
 
 const isMobile = () => {
     let check = false

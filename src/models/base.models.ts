@@ -97,6 +97,8 @@ export interface DataOptions {
     colorTitle?: string
     colorDescription?: string
     isPositionFixed?: boolean
+    borderWidth?: string
+    borderColor?: string
     top?: number
     left?: number
   }

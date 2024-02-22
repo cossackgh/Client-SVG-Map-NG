@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    "types": [
+      "vitest/importMeta"
+    ],
     "target": "ES2020",
     "useDefineForClassFields": true,
     "module": "ESNext",
