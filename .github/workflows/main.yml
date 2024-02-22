@@ -20,6 +20,7 @@ jobs:
         run: | # Generate static project
           echo "deploying..." 
           npm ci
+          npm run build1
 #      - name: Deploy to Hosting
 #        uses: "appleboy/scp-action@v0.1.4" # Use the scp-action
 #        with:
