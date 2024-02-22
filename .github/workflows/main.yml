@@ -14,13 +14,12 @@ jobs:
     name: run deployment # A name for the deployment job
     runs-on: ubuntu-latest # The type of machine to run the job on
     environment: production # The deployment environment
-#    steps:
-#      - uses: actions/checkout@v3 # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-#      - name: Astro generate app # Run a one-line script
-#        run: | # Generate static project
-#          echo "deploying..." 
-#          npm ci 
-#          npm run build 
+    steps:
+      - uses: actions/checkout@v3 # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Build Project # Run a one-line script
+        run: | # Generate static project
+          echo "deploying..." 
+          npm ci
 #      - name: Deploy to Hosting
 #        uses: "appleboy/scp-action@v0.1.4" # Use the scp-action
 #        with:
