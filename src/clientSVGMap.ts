@@ -9,16 +9,16 @@ import type {
   DataInteractive,
   DataOptions,
   //MapTheme,
-  BalloonOptions,
+  BalloonData,
   //CastomBalloonOptions,
-  //BalloonTheme,
+  BalloonTheme,
 } from './models/base.models'
 export class ClientSVGEditorNG{
     
      options: any;
      public DEBUG: boolean = false;
      public log = logger;
-     nodeBallon!: Balloon;
+     objectBalloon!: Balloon;
     /**
      * The constructor for the client SVG map.
      * @param node - The HTML element that will contain the SVG map.
@@ -28,7 +28,7 @@ export class ClientSVGEditorNG{
      *  
      **/
 
-    constructor(private node: HTMLElement, private urlsvg: string, private dataItems: DataInteractive[], options: DataOptions){
+    constructor(private node: HTMLElement, private urlsvg: string, private dataItems: DataInteractive[], baloon: Balloon | null = null, options: DataOptions){
       this.log(this.DEBUG,"constructor",node);
       this.node = node;
       this.urlsvg = urlsvg;
@@ -55,25 +55,25 @@ export class ClientSVGEditorNG{
           //this.setOptions();
           this.setInteractiveLayer();
           // Create a balloon
-          if (!isMobile()) {
-            this.nodeBallon = this.createBalloon(
+          
+            this.objectBalloon = this.createBalloon(
               {
-                title: 'TITLE',
-                description: 'DESCRIPTION',
-                image: 'IMAGE',
-                balloonTheme: {
-                  colorBG: '#000000',
-                  colorTitle: '#ffffff',
-                  colorDescription: '#ffffff',
-                  isPositionFixed: false,
-                  borderWidth: '2px',
-                  borderColor: '#556699',
-                  top: 0,
-                  left: 0,
-                }
+                title: 'TITLE#################',
+               // description: 'DESCRIPTION',
+                //image: 'IMAGE',
+              },
+              {
+                colorBG: '#ffffff',
+                colorTitle: '#5C5C5C',
+                colorDescription: '#5C5C5C',
+                isPositionFixed: false,
+                borderWidth: '2px',
+                borderColor: '#6391CC',
+                top: 0,
+                left: 0,
               }
             )
-          }
+          
 
         })
         
@@ -108,16 +108,23 @@ export class ClientSVGEditorNG{
       this.log(this.DEBUG,"onPathMouseOver path",path);
       if (path.tagName !== 'g') {
         (path as SVGElement).setAttribute('fill', this.options.mapTheme.colorItem.colorBGActive);
-        (path as SVGElement).setAttribute('opacity', this.options.mapTheme.colorItem.opacityActive);
+        (path as SVGElement).setAttribute('fill-opacity', this.options.mapTheme.colorItem.opacityActive);
+        
+        (path as SVGElement).setAttribute('stroke', this.options.mapTheme.borderItem.colorBorderActive);
       }
       const id = path.id
       this.log(this.DEBUG,"onPathMouseOver id",id);
       const item = this.dataItems.find((item) => item.idmap === id)
-      this.log(this.DEBUG,"onPathMouseOver item",item);
-      if (item) {
+      this.log(this.DEBUG,"########### Before item",item);
+      if ( item == null) {
+        this.log(this.DEBUG,"###########  item === null",item);
+      }
+      else  {
         this.log(this.DEBUG,"onPathMouseOver item",item);
-
-        this.showBalloon(item)
+        if (item !== undefined){
+          this.showBalloon(item)
+        }
+        
       }
     }
     /**
@@ -131,40 +138,22 @@ export class ClientSVGEditorNG{
      // this.log(this.DEBUG,"onPathMouseOver path",path);
       if (path.tagName !== 'g') {
         (path as SVGElement).setAttribute('fill', this.options.mapTheme.colorItem.colorBG);
-        (path as SVGElement).setAttribute('opacity', this.options.mapTheme.colorItem.opacity);
+        (path as SVGElement).setAttribute('fill-opacity', this.options.mapTheme.colorItem.opacity);
+        (path as SVGElement).setAttribute('stroke', this.options.mapTheme.borderItem.colorBorder);
       }
       this.hideBalloon()
     }
-    /**
-     * Shows a balloon for a path element.
-     * @param item - The data item for the path element.
-     * @returns void
-     */
-    public showBalloon = (item: DataInteractive) => {
-      this.log(this.DEBUG,"showBalloon item",item);
-      this.log(this.DEBUG,"showBalloon this.nodeBallon",this.nodeBallon);
-      if (this.nodeBallon) {
-        this.nodeBallon.show()
-        this.nodeBallon.render({title: item.title, description: item.description})
-      }
-    }
-    /**
-     * Hides the balloon.
-     * @returns void
-     */
-    public hideBalloon = () => {
-      if (this.nodeBallon) {
-        this.nodeBallon.hide()
-      }
-    }
+
     /**
      * Sets the interactive layer for the client SVG map.
      * @returns void
      */
     public setInteractiveLayer = () => {
-      this.log(this.DEBUG,"setInteractiveLayer this.node",this.node);
+        this.log(this.DEBUG,"setInteractiveLayer this.node",this.node);
+        this.log(this.DEBUG,"setInteractiveLayer this.options",this.options);
         const interactiveLayer = document.querySelector('#'+this.options.idInteractiveLayer)
         this.log(this.DEBUG,"setInteractiveLayer interactiveLayer",interactiveLayer);
+        this.clearInteractiveLayer();
         if (interactiveLayer) {
           //let allElements = interactiveLayer.querySelectorAll(':scope > *:not(g)');
           let elementsOnly = interactiveLayer.querySelectorAll(':scope > *:not(g)');
@@ -172,12 +161,14 @@ export class ClientSVGEditorNG{
           this.log(this.DEBUG,"setInteractiveLayer allElements",allElements);
           this.log(this.DEBUG,"setInteractiveLayer elementsOnly",elementsOnly);
           this.log(this.DEBUG,"setInteractiveLayer isMobile",isMobile());
-          if (!isMobile()) {
+          this.log(this.DEBUG,"setInteractiveLayer this.objectBalloon ",this.objectBalloon);
+          if (!isMobile() && this.objectBalloon.balloonDom !== null) {
             interactiveLayer.addEventListener('mousemove', (e: any) => {
-              this.log(this.DEBUG,'mousemove ', {X: e.x, Y: e.y});
-              this.handleMousemove(e, this.nodeBallon, this.options!.isCustomBalloon!)
+              this.log(this.DEBUG,'before handleMousemove mousemove ', {X: e.x, Y: e.y});
+
+              this.handleMousemove(e, this.objectBalloon, this.options!.isCustomBalloon!)
       
-              //  throttle(handleMousemove(e,this.nodeBallon), 11200)
+              //  throttle(handleMousemove(e,this.objectBalloon), 11200)
             })
           }
 
@@ -193,7 +184,7 @@ export class ClientSVGEditorNG{
                     if (element.tagName !== 'g') {
                       //this.log(this.DEBUG,"setInteractiveLayer element",element);
                       (element as SVGElement).setAttribute('fill', this.options.mapTheme.colorItem.colorBG);
-                      (element as SVGElement).setAttribute('opacity', this.options.mapTheme.colorItem.opacity);
+                      (element as SVGElement).setAttribute('fill-opacity', this.options.mapTheme.colorItem.opacity);
                       //(element as SVGElement).style.opacity = this.options.mapTheme.colorItem.opacity;
 
                     }
@@ -226,6 +217,36 @@ export class ClientSVGEditorNG{
             })
       }
       }
+
+
+    /**
+     * Clears the interactive layer for the client SVG map.
+     * @returns void
+     * 
+    */
+    public clearInteractiveLayer = () => {
+      const interactiveLayer = document.querySelector('#'+this.options.idInteractiveLayer);
+      if (interactiveLayer) {
+        const allElements = interactiveLayer.querySelectorAll('*');
+        allElements.forEach((element) => {
+          if (element.tagName.toLowerCase() !== 'g' && element.closest('g') !== interactiveLayer) {
+            return;
+          }
+          if (element.tagName !== 'g') {
+            (element as SVGElement).removeAttribute('style');
+            (element as SVGElement).setAttribute('fill', this.options.mapTheme.colorItem.colorBG);
+            (element as SVGElement).setAttribute('fill-opacity', this.options.mapTheme.colorItem.opacity);
+            (element as SVGElement).setAttribute('stroke', this.options.mapTheme.borderItem.colorBorder);
+            (element as SVGElement).setAttribute('stroke-width', this.options.mapTheme.borderItem.widthBorder);
+          }
+          (element as SVGElement).style.cursor = 'pointer';
+          element.removeEventListener('click', this.onPathClick);
+          element.removeEventListener('mouseover', this.onPathMouseOver);
+          element.removeEventListener('mouseout', this.onPathMouseOut);
+        });
+      }
+
+    } 
 
     /**
      * Inserts an SVG file into the client SVG map.
@@ -294,15 +315,16 @@ export class ClientSVGEditorNG{
        * @param options - The options for the balloon.
        * @returns The balloon.
        */
-      private createBalloon = (options: BalloonOptions) => {
-        //  console.log('createBalloon options = ', options)
-/*         const balloonDom = document.createElement('div')
+      private createBalloon = (data: BalloonData, theme: BalloonTheme) => {
+          console.log('createBalloon options = ', data)
+      /*  const balloonDom = document.createElement('div')
         balloonDom.id = 'BalloonItem'
         document.body.appendChild(balloonDom) */
-        let baloon = new Balloon(options)
-      
-        //  console.log('createBalloon document IF baloon.balloonDom = ', baloon.balloonDom)
-        if (baloon.balloonDom !== null) {
+        let baloon = new Balloon(data, theme)
+        baloon.init()
+        baloon.hide()
+        console.log('createBalloon document IF baloon.balloonDom = ', baloon.balloonDom)
+       /* if (baloon.balloonDom !== null) {
           //baloon.delete();
           baloon.render({title: 'TITLE', description: 'DESCRIPTION'});
         } else {
@@ -321,39 +343,35 @@ export class ClientSVGEditorNG{
             balloonDom.style.zIndex = '999999'
             document.body.appendChild(balloonDom)
           } else {
-
-/*             const balloonDom = document.createElement('div')
-           const balloonTitle = document.createElement('div')
-
-            balloonDom.style.position = 'fixed'
-            balloonDom.style.top = '-20px'
-            balloonDom.style.left = '0px'
-            balloonDom.id = 'BalloonItem'
-            balloonDom.className = 'balloon'
-            balloonDom.style.display = 'block'
-            balloonDom.style.color = baloon.themeBalloonOptions?.colorTitle as string
-            balloonDom.style.backgroundColor = baloon.themeBalloonOptions?.colorBG as string
-            balloonDom.style.borderWidth = baloon.themeBalloonOptions?.borderWidth as string
-            balloonDom.style.borderColor = baloon.themeBalloonOptions?.borderColor as string
-            balloonDom.style.borderStyle = 'solid'
-            balloonDom.style.padding = '10px'
-            balloonDom.style.zIndex = '999999'
-            balloonDom.innerHTML = `EXAMPLE BALLOON`
-
-            balloonTitle.style.display = 'block'
-
-            document.body.appendChild(balloonDom)
-            balloonDom.appendChild(balloonTitle) */
-           // baloon.render({title: 'TITLE', description: 'DESCRIPTION'});
           }
-      
-          //baloon.balloonDom = document.querySelector('#BalloonItem')
           baloon.render({title: 'TITLE', description: 'DESCRIPTION'});
           baloon.hide()
-        }
-        //  console.log('createBalloon document = ', baloon.balloonDom)
+        } */
         return baloon
       }
+    /**
+     * Shows a balloon for a path element.
+     * @param item - The data item for the path element.
+     * @returns void
+     */
+    public showBalloon = (item: DataInteractive) => {
+      this.log(this.DEBUG,"showBalloon item",item);
+      this.log(this.DEBUG,"showBalloon this.objectBalloon",this.objectBalloon);
+      if ( item !== null) {
+        this.objectBalloon.show()
+        this.objectBalloon.render({title: item.title, description: item.description})
+      }
+    }
+    /**
+     * Hides the balloon.
+     * @returns void
+     */
+    public hideBalloon = () => {
+      if (this.objectBalloon) {
+        this.objectBalloon.hide()
+      }
+    }
+
 /*       private   getPositionScroll = (element: HTMLElement = this.node) => {
         const scrollX = element.getBoundingClientRect().left
         const scrollY = element.getBoundingClientRect().top
@@ -368,8 +386,8 @@ export class ClientSVGEditorNG{
         /*   console.log(`cursor ev =`, position);
         console.log(`cursor : X= ${position.x} px : Y= ${position.y} px\n`);*/
         // console.log(`cursor : baloon =`, baloon, ` \n`)
-        baloon.show()
-        this.log(this.DEBUG,'baloon.balloonDom = ', baloon.balloonDom);
+        //baloon.show()
+        this.log(this.DEBUG,'handleMousemove baloon.balloonDom = ', baloon.balloonDom);
         const getWidthElement = isCustomBalloon
           ? baloon.balloonDom.offsetWidth
           : baloon.balloonDom.offsetWidth

@@ -17,6 +17,25 @@ export interface DataInteractive {
     description?: string
     image?: string
   }
+/**
+ * Represents a data interactive object.
+ * @id {string} id - The ID of the data.
+ * @idmap {string} idmap - The ID of the map.
+ * @title {string} title - The title of the data to view on hover ballon.
+ * @slug {string} slug - The slug of the data - link to view on hover ballon.
+ * @description {string} description - The description of the data  to view on hover ballon.
+ * @image {string} image - The image associated with the data  to view on hover ballon.
+ * @returns void
+ */
+export interface DataInteractiveM {
+    id?: string
+    idmap?: string
+    numberbox?: string
+    title?: string
+    slug?: string
+    description?: string
+    image?: string
+  }
   
 
 /**
@@ -64,11 +83,10 @@ export interface DataOptions {
  * @image {string} image - This is the image of the balloon
  * @returns void
  */
-  export interface BalloonOptions {
-    title?: string
+  export interface BalloonData {
+    title: string
     description?: string
     image?: string
-    balloonTheme: BalloonTheme
   }
   
   /**
@@ -125,6 +143,8 @@ export interface DataOptions {
   export interface PlaceBorder {
     isBorder?: boolean
     widthBorder?: number
+    colorBorder?: string
+    colorBorderActive?: string
   }
 
       /**

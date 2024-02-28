@@ -15,7 +15,7 @@
 
     <script type="module">
       import {ClientSVGEditorNG} from '../src/clientSVGMap';
-      import {dataShops2} from './js/dataitems.ts';
+      import {dataShops2, dataShopsMTK} from './js/dataitems.ts';
       const getSvgNode = () => {
         return document.getElementById('map');
       }
@@ -31,20 +31,23 @@
         colorItem: {
           colorBG: '#222',
           colorBorder: '#000',
-          colorBGActive: '#f22',
-          colorBorderActive: '#000',
+          colorBGActive: '#ffffff',
+          colorBorderActive: '#6391CC',
           opacity: 0.1,
-          opacityActive: 0.7
+          opacityActive: 0.1
         },
         borderItem: {
           isBorder: true,
-          widthBorder: 3
+          widthBorder: 1,
+          colorBorder: '#aaa',
+          colorBorderActive: '#6391CC',
         },
       }
       const svgEditor = new ClientSVGEditorNG(
          getSvgNode(),
          'assets/images/vite.svg',
-         dataShops2,
+         dataShopsMTK,
+         null,
          {
             title: 'TITLE MAP',
             colorBG: "#fff",
@@ -65,7 +68,7 @@
           width: '50%',
           height: '100%'
         }); */
-        svgEditor.insertFromFile('assets/images/map/Shelkovsky-float-0.svg')
+        svgEditor.insertFromFile('assets/images/map/floor-0.svg')
         .then((res) => {
           console.log('insertFromFile res = ', res)
 /*           svgEditor.setOptions({
