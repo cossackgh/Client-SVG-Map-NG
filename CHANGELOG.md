@@ -1,5 +1,11 @@
 # client-svg-map-ng
 
+## 0.1.4
+
+### Patch Changes
+
+- fix package.json 2
+
 ## 0.1.3
 
 ### Patch Changes
