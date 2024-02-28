@@ -455,7 +455,8 @@ test('ClientSVGEditorNG should initialize correctly', () => {
     const editor = new ClientSVGEditorNG(
         getSvgNode, 
         '../demo/assets/images/vite.svg', 
-        dataShops2,          
+        dataShops2,
+        null,
         {
             title: 'TITLE MAP',
             colorBG: "#fff",
