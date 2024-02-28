@@ -19,6 +19,7 @@ export class ClientSVGEditorNG{
      public DEBUG: boolean = false;
      public log = logger;
      objectBalloon!: Balloon;
+     customBalloon: Balloon | null;
     /**
      * The constructor for the client SVG map.
      * @param node - The HTML element that will contain the SVG map.
@@ -28,17 +29,19 @@ export class ClientSVGEditorNG{
      *  
      **/
 
-    constructor(private node: HTMLElement, private urlsvg: string, private dataItems: DataInteractive[], baloon: Balloon | null = null, options: DataOptions){
+    constructor(private node: HTMLElement, private urlsvg: string, private dataItems: DataInteractive[], balloon: Balloon | null = null, options: DataOptions){
       this.log(this.DEBUG,"constructor",node);
       this.node = node;
       this.urlsvg = urlsvg;
       this.options = options;
       this.dataItems = dataItems;
+      this.customBalloon = balloon;
 
 
       this.log(this.DEBUG,"constructor this.node",this.node);
       this.log(this.DEBUG,"constructor this.dataItems",this.dataItems);
       this.log(this.DEBUG,"constructor this.options",this.options);
+      this.log(this.DEBUG,"constructor this.customBalloon",this.customBalloon);
       
     }
     /**
