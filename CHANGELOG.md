@@ -1,5 +1,11 @@
 # client-svg-map-ng
 
+## 0.1.5
+
+### Patch Changes
+
+- change build scheme
+
 ## 0.1.4
 
 ### Patch Changes
