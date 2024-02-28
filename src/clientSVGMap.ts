@@ -56,7 +56,7 @@ export class ClientSVGEditorNG{
         this.insertFromFile(this.urlsvg).then(() => {
           this.log(this.DEBUG,"init() insertFromFile",this.urlsvg);
           //this.setOptions();
-          this.setInteractiveLayer();
+
           // Create a balloon
           
             this.objectBalloon = this.createBalloon(
@@ -75,7 +75,9 @@ export class ClientSVGEditorNG{
                 top: 0,
                 left: 0,
               }
-            )
+            )          
+          this.setInteractiveLayer();
+
           this.log(this.DEBUG,"init() this.objectBalloon",this.objectBalloon);
 
         }).catch((error) => {
