@@ -76,8 +76,10 @@ export class ClientSVGEditorNG{
                 left: 0,
               }
             )
-          
+          this.log(this.DEBUG,"init() this.objectBalloon",this.objectBalloon);
 
+        }).catch((error) => {
+          this.log(this.DEBUG,"init() insertFromFile error",error);
         })
         
     }
