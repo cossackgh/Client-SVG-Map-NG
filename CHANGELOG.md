@@ -1,5 +1,11 @@
 # client-svg-map-ng
 
+## 0.1.2
+
+### Patch Changes
+
+- fix entrypoint -1
+
 ## 0.1.1
 
 ### Patch Changes
