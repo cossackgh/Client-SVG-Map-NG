@@ -1,5 +1,11 @@
 # client-svg-map-ng
 
+## 0.1.8
+
+### Patch Changes
+
+- add event to sign
+
 ## 0.1.7
 
 ### Patch Changes
