@@ -446,6 +446,37 @@ test('ClientSVGEditorNG should initialize correctly', () => {
           widthBorder: 3
         },
       }
+      const signTitles = [
+        {
+        pref: 'wc',
+        title: 'Туалет',
+        },
+        {
+        pref: 'escalator',
+        title: 'Эскалатор',
+        },
+        {
+        pref: 'elevator',
+        title: 'Лифт',
+        },
+        {
+        pref: 'stair',
+        title: 'Лестница',
+        },
+        {
+        pref: 'atm',
+        title: 'Банкомат',
+        },
+        {
+        pref: 'entrance',
+        title: 'Вход',
+        },
+        {
+        pref: 'info',
+        title: 'Информация',
+        },
+        
+      ]    
     function gotoURLClick(dataelement: any) {
         console.log('gotoURLClick element = ', dataelement)
         //const geturl = dataelement.getAttribute('data-url')
@@ -456,6 +487,7 @@ test('ClientSVGEditorNG should initialize correctly', () => {
         getSvgNode, 
         '../demo/assets/images/vite.svg', 
         dataShops2,
+        signTitles,
         null,
         {
             title: 'TITLE MAP',
