@@ -36,8 +36,17 @@ export interface DataInteractiveM {
     description?: string
     image?: string
   }
-  
 
+/**
+ * Represents a data interactive object.
+ * @pref {string} pref - The prefix of the data.
+ * @title {string} title - The title of the data.
+ * @returns void
+ **/
+export interface DataSigns {
+  pref: string
+  title: string
+}
 /**
  * Represents the options for data.
  * @title {string} title - The title of the data.

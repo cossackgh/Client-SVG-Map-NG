@@ -77,6 +77,7 @@ export class Balloon  {
     }
     defaultRender(dataRender: any) {
       console.log('defaultRender dataRender = ', dataRender)
+      console.log('defaultRender dataRender.image = ', dataRender.image)
       this.balloonDom!.innerHTML = ``
       if (dataRender.description !== undefined && dataRender.description !== '') {
 
@@ -100,13 +101,16 @@ export class Balloon  {
           };position: absolute;bottom: 0;left: 0;">
             
             <div class="balloon-title" style="
-            font-size: 12px;
+            font-size: 11px;
             text-transform: uppercase; 
             text-align: center;
             padding-bottom: 5px;
             color:${
               this.themeBalloonOptions?.colorTitle
             }">${dataRender.title}</div>
+
+            ${(dataRender.image !== undefined)? `<div><img src="${dataRender.image}" style="width: 95%; max-height: 40px; "/></div>`: ''}
+            
 
             <div class="balloon-content" style="
             color:${
@@ -129,7 +133,7 @@ export class Balloon  {
               } ${
                 this.themeBalloonOptions?.borderColor
               } transparent ;
-              transform: translate(0, -8px) rotate(45deg);  background-color: ${
+              transform: translate(0, -6px) rotate(45deg);  background-color: ${
                 this.themeBalloonOptions?.colorBG
               }">
               </div>
@@ -138,30 +142,47 @@ export class Balloon  {
         `;
       } else {
         this.balloonDom!.innerHTML = `
-          <div class="balloon" 
-          style="font-family: sans-serif; 
-          padding: 10px;
-          display: flex;
-          width: 100%;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;background-color: ${
-            this.themeBalloonOptions?.colorBG
-          };position: absolute;bottom: 0;left: 0;">
-            <div class="balloon-title" style="
-            text-transform: uppercase; 
-            text-align: center;
-            color:${
-              this.themeBalloonOptions?.colorTitle
-            }">${dataRender.title}</div>
+        <div class="balloon" 
+        style="font-family: sans-serif; 
+        padding: 5px ;
+        display: flex;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        border-radius: 10px;
+        border-width: 2px;
+        border-style: solid;
+        border-color: ${
+            this.themeBalloonOptions?.borderColor
+          };
+        justify-content: center;background-color: ${
+          this.themeBalloonOptions?.colorBG
+        };position: absolute;bottom: 0;left: 0;">
+          
+          <div class="balloon-title" style="
+          font-size: 11px;
+          text-transform: uppercase; 
+          text-align: center;
+          z-index: 100;
+          color:${
+            this.themeBalloonOptions?.colorTitle
+          }">${dataRender.title}</div>
 
-            <div style="height: 0px;">
-            <div class="box45" style="  width: 15px;
-            height: 15px;
-            transform: translate(0, 3px) rotate(45deg);  background-color: ${
-              this.themeBalloonOptions?.colorBG
-            }">
-            </div>
+            <div style="height: 1px;">
+              <div class="box45" style="  
+              width: 15px;
+              height: 15px;
+              border-width: 2px;
+              border-style: solid;
+              border-color: transparent ${
+                this.themeBalloonOptions?.borderColor
+              } ${
+                this.themeBalloonOptions?.borderColor
+              } transparent ;
+              transform: translate(0, -2px) rotate(45deg);  background-color: ${
+                this.themeBalloonOptions?.colorBG
+              }">
+              </div>
             </div>
               
           </div>
