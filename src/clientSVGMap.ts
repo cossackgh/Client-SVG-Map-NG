@@ -12,7 +12,9 @@ import type {
   BalloonData,
   //CastomBalloonOptions,
   BalloonTheme,
+  DataSigns,
 } from './models/base.models'
+
 export class ClientSVGEditorNG{
     
      options: any;
@@ -29,12 +31,13 @@ export class ClientSVGEditorNG{
      *  
      **/
 
-    constructor(private node: HTMLElement, private urlsvg: string, private dataItems: DataInteractive[], balloon: Balloon | null = null, options: DataOptions){
+    constructor(private node: HTMLElement, private urlsvg: string, private dataItems: DataInteractive[], private dataSigns: DataSigns[], balloon: Balloon | null = null, options: DataOptions){
       this.log(this.DEBUG,"constructor",node);
       this.node = node;
       this.urlsvg = urlsvg;
       this.options = options;
       this.dataItems = dataItems;
+      this.dataSigns = dataSigns;
       this.customBalloon = balloon;
 
 
@@ -42,7 +45,17 @@ export class ClientSVGEditorNG{
       this.log(this.DEBUG,"constructor this.dataItems",this.dataItems);
       this.log(this.DEBUG,"constructor this.options",this.options);
       this.log(this.DEBUG,"constructor this.customBalloon",this.customBalloon);
+      this.log(this.DEBUG,"constructor this.dataSigns",this.dataSigns);
       
+    }
+
+
+    /**
+     * Updates the data items of the client SVG map.
+     * @param dataItems - An array of DataInteractive objects representing the updated data items.
+     */
+    public updateDataItems = (dataItems: DataInteractive[]) => {
+      this.dataItems = dataItems
     }
     /**
      * Initializes the client SVG map.
@@ -126,13 +139,27 @@ export class ClientSVGEditorNG{
       if ( item == null) {
         this.log(this.DEBUG,"###########  item === null",item);
       }
+      else if (item === undefined) {
+        this.log(this.DEBUG,"###########  item === undefined",item);
+        const signData = this.dataSigns.find((item) => item.pref === id.split('-')[0])
+        this.log(this.DEBUG,"###########  signData",signData);
+        this.showBalloon({title: signData?.title})
+      }
       else  {
         this.log(this.DEBUG,"onPathMouseOver item",item);
         if (item !== undefined){
+         
           this.showBalloon(item)
         }
         
       }
+    }
+    public onGroupMouseOver = (grp: any) => {
+      this.log(this.DEBUG,"onPathMouseOver grp",grp);
+      const id = grp.id
+      const signData = this.dataSigns.find((item) => item.pref === id.split('-')[0])
+        this.log(this.DEBUG,"###########  signData",signData);
+        this.showBalloon({title: signData?.title})
     }
     /**
      * Handles the mouseout event for a path element.
@@ -207,8 +234,10 @@ export class ClientSVGEditorNG{
                       })
                       element.addEventListener('mouseover', (e) => {
                         const target = e.target as SVGElement; // Explicitly type the event target as SVGElement
-                      this.log(this.DEBUG,"addEventListener target",target);
+                        this.log(this.DEBUG,"addEventListener target",target);
                       if (target.tagName.toLowerCase() === 'g' || (target.closest('g') && target.closest('g') !== interactiveLayer)) {
+                        this.log(this.DEBUG,"addEventListener EXIT!???",target.closest('g')?.id);
+                        this.onGroupMouseOver(target.closest('g'))
                         return;
                         }
 
@@ -217,6 +246,7 @@ export class ClientSVGEditorNG{
                       element.addEventListener('mouseout', (e) => {
                         const target = e.target as SVGElement; // Explicitly type the event target as SVGElement
                         if (target.tagName.toLowerCase() === 'g' || (target.closest('g') && target.closest('g') !== interactiveLayer)) {
+                          this.hideBalloon()
                           return;
                           }
                         this.onPathMouseOut(e)
@@ -366,7 +396,7 @@ export class ClientSVGEditorNG{
       this.log(this.DEBUG,"showBalloon this.objectBalloon",this.objectBalloon);
       if ( item !== null) {
         this.objectBalloon.show()
-        this.objectBalloon.render({title: item.title, description: item.description})
+        this.objectBalloon.render({title: item.title, image: item.image!, slug: item.slug!, description: item.description!})
       }
     }
     /**

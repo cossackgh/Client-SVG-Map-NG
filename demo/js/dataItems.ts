@@ -7,7 +7,7 @@ const dataShopsMTK: DataInteractiveM[] = [
     title: 'Перекресток',
     slug: 'https://soulful-racism.info',
     description: '0Б02',
-    image: 'https://loremflickr.com/128/128/abstract?73275',
+    image: 'http://localhost:3015/mediashops/logo-perekrestok.webp',
   },
   {
     id: '1',
@@ -16,7 +16,15 @@ const dataShopsMTK: DataInteractiveM[] = [
     title: 'ВКУСВИЛЛ',
     slug: 'https://soulful-racism.info',
     description: '0А01',
-    image: 'https://loremflickr.com/128/128/abstract?73275',
+    image: 'http://localhost:3015/mediashops/logo-vkusvill.webp',
+  },
+  {
+    id: '2',
+    idmap: 's-0a06',
+    numberbox:"0А06",
+    title: 'ФОРА БАНК',
+    slug: 'https://soulful-racism.info',
+    description: '0А06',
   },
 ]
 

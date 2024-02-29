@@ -43,10 +43,43 @@
           colorBorderActive: '#6391CC',
         },
       }
+
+      const signTitles = [
+        {
+        pref: 'wc',
+        title: 'Туалет',
+        },
+        {
+        pref: 'escalator',
+        title: 'Эскалатор',
+        },
+        {
+        pref: 'elevator',
+        title: 'Лифт',
+        },
+        {
+        pref: 'stair',
+        title: 'Лестница',
+        },
+        {
+        pref: 'atm',
+        title: 'Банкомат',
+        },
+        {
+        pref: 'entrance',
+        title: 'Вход',
+        },
+        {
+        pref: 'info',
+        title: 'Информация',
+        },
+        
+      ]
       const svgEditor = new ClientSVGEditorNG(
          getSvgNode(),
          'assets/images/vite.svg',
          dataShopsMTK,
+         signTitles,
          null,
          {
             title: 'TITLE MAP',
