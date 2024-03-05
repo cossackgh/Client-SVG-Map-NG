@@ -92,6 +92,9 @@ export class ClientSVGEditorNG{
           this.setInteractiveLayer();
 
           this.log(this.DEBUG,"init() this.objectBalloon",this.objectBalloon);
+          const getNodeSVG = this.node.querySelector('svg')
+          this.log(this.DEBUG,"init() getNodeSVG",getNodeSVG);
+          return getNodeSVG
 
         }).catch((error) => {
           this.log(this.DEBUG,"init() insertFromFile error",error);
