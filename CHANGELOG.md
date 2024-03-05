@@ -1,5 +1,11 @@
 # client-svg-map-ng
 
+## 0.1.12
+
+### Patch Changes
+
+- add async to init()
+
 ## 0.1.11
 
 ### Patch Changes
