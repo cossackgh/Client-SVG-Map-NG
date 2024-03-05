@@ -1,5 +1,11 @@
 # client-svg-map-ng
 
+## 0.1.9
+
+### Patch Changes
+
+- add fix position to balloon
+
 ## 0.1.8
 
 ### Patch Changes
