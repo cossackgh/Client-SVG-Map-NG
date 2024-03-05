@@ -61,12 +61,12 @@ export class ClientSVGEditorNG{
      * Initializes the client SVG map.
      * @returns void
      */
-    public init(): void {
+    public init = async () => {
         this.log(this.DEBUG,"init() node",this.node);
         this.log(this.DEBUG,"init() urlsvg",this.urlsvg);
         this.log(this.DEBUG,"init() options",this.options);
 
-        this.insertFromFile(this.urlsvg).then(() => {
+        const retNode = this.insertFromFile(this.urlsvg).then(() => {
           this.log(this.DEBUG,"init() insertFromFile",this.urlsvg);
           //this.setOptions();
 
@@ -99,7 +99,7 @@ export class ClientSVGEditorNG{
         }).catch((error) => {
           this.log(this.DEBUG,"init() insertFromFile error",error);
         })
-        
+        return retNode
     }
 
     /**
