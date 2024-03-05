@@ -100,7 +100,26 @@
         
       );
       svgEditor.DEBUG = true;
-      svgEditor.init();
+
+      const nodeSVG = async () => await svgEditor.init()
+    .then((node) => {
+        console.log("node ############ ",node)
+/*         const svgEditorPanZoom = svgPanZoom(node, {
+                            zoomEnabled: true,
+                            controlIconsEnabled: true,
+                            fit: true,
+                            center: true,
+                            minZoom: 0.1
+                        });
+            console.log('svgEditorPanZoom', svgEditorPanZoom);  */
+
+    }).catch((err) => {
+        console.error("ERROR nodeSVG = ",err)
+    })
+    nodeSVG();
+
+
+      //svgEditor.init();
       setTimeout(() => {
 /*         svgEditor.setOptions({
           width: '50%',
@@ -113,6 +132,7 @@
 
             mapTheme:  MapTheme
           }); */
+          nodeSVG();
           svgEditor.setInteractiveLayer();
         });
       }, 2000);
