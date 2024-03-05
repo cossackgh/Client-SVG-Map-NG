@@ -78,6 +78,7 @@ export interface DataOptions {
     funcParams?: any;
     mapTheme?: MapTheme;
     isCustomBalloon?: boolean;
+    isBalloonFixed?: boolean;
     nodeCustomBalloon?: HTMLElement | null;
     dataStructureCustomBalloon?: CastomBalloonOptions | null;
     isMobileZoom?: boolean | null;

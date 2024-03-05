@@ -416,7 +416,7 @@ export class ClientSVGEditorNG{
         return { scrollX, scrollY }
       } */
       private  handleMousemove = (
-        position: { x: number; y: number },
+        activeObj: { target: any, x: number, y: number},
         baloon: any,
         isCustomBalloon: boolean
       ) => {
@@ -424,21 +424,29 @@ export class ClientSVGEditorNG{
         console.log(`cursor : X= ${position.x} px : Y= ${position.y} px\n`);*/
         // console.log(`cursor : baloon =`, baloon, ` \n`)
         //baloon.show()
+        const position = { x: activeObj.x, y: activeObj.y }
+        this.log(this.DEBUG,'handleMousemove target = ',activeObj.target);
+        const targetBBox = activeObj.target.getBoundingClientRect();
+        const balloonBBox = baloon.balloonDom.getBoundingClientRect();
+        this.log(this.DEBUG,'handleMousemove targetBBox = ',targetBBox);
+        this.log(this.DEBUG,'handleMousemove balloonBBox = ',balloonBBox);
         this.log(this.DEBUG,'handleMousemove baloon.balloonDom = ', baloon.balloonDom);
         const getWidthElement = isCustomBalloon
           ? baloon.balloonDom.offsetWidth
           : baloon.balloonDom.offsetWidth
         this.log(this.DEBUG,'getWidthElement = ', getWidthElement);
         this.log(this.DEBUG,'baloon.themeBalloonOptions = ', baloon.themeBalloonOptions);
-        //  console.log(`cursor : baloon =`, getWidthElement, ` \n`)
-        if (!baloon.themeBalloonOptions?.isPositionFixed) {
+        this.log(this.DEBUG,'this.options.isBalloonFixed = ', this.options.isBalloonFixed);
+        
+        if (this.options.isBalloonFixed) {
+          this.log(this.DEBUG,'.isBalloonFixed = true');
           baloon.balloonDom!.style.transform = `translate(${
-            position.x - getWidthElement / 2 - baloon.themeBalloonOptions.left
-          }px, ${position.y - 40 - baloon.themeBalloonOptions.top}px)`
+            targetBBox.x - balloonBBox.width / 2 + targetBBox.width / 2 -12
+          }px, ${targetBBox.y}px)`
         } else {
-
+          this.log(this.DEBUG,'.isBalloonFixed = false');
           baloon.balloonDom!.style.transform = `translate(${
-            position.x - getWidthElement / 2
+            position.x - getWidthElement / 2 -12
           }px, ${position.y - 40}px)`
         }
       }
