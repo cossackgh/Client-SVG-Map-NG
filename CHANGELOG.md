@@ -1,5 +1,11 @@
 # client-svg-map-ng
 
+## 0.1.10
+
+### Patch Changes
+
+- add shift position balloon fixed
+
 ## 0.1.9
 
 ### Patch Changes

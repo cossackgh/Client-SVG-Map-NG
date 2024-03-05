@@ -441,8 +441,8 @@ export class ClientSVGEditorNG{
         if (this.options.isBalloonFixed) {
           this.log(this.DEBUG,'.isBalloonFixed = true');
           baloon.balloonDom!.style.transform = `translate(${
-            targetBBox.x - balloonBBox.width / 2 + targetBBox.width / 2 -12
-          }px, ${targetBBox.y}px)`
+            targetBBox.x - balloonBBox.width / 2 + targetBBox.width / 2 + this.options.fixedBalloonPosition.x
+          }px, ${targetBBox.y + this.options.fixedBalloonPosition.y}px)`
         } else {
           this.log(this.DEBUG,'.isBalloonFixed = false');
           baloon.balloonDom!.style.transform = `translate(${

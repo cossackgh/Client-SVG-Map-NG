@@ -79,6 +79,7 @@ export interface DataOptions {
     mapTheme?: MapTheme;
     isCustomBalloon?: boolean;
     isBalloonFixed?: boolean;
+    fixedBalloonPosition?: {x: number, y: number};
     nodeCustomBalloon?: HTMLElement | null;
     dataStructureCustomBalloon?: CastomBalloonOptions | null;
     isMobileZoom?: boolean | null;
