@@ -1,5 +1,11 @@
 # client-svg-map-ng
 
+## 0.1.11
+
+### Patch Changes
+
+- add node SVG
+
 ## 0.1.10
 
 ### Patch Changes
