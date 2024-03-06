@@ -207,13 +207,14 @@ export class ClientSVGEditorNG{
           this.log(this.DEBUG,"setInteractiveLayer isMobile",isMobile());
           this.log(this.DEBUG,"setInteractiveLayer this.objectBalloon ",this.objectBalloon);
           if (!isMobile() && this.objectBalloon.balloonDom !== null) {
-            interactiveLayer.addEventListener('mousemove', (e: any) => {
-              //this.log(this.DEBUG,'before handleMousemove mousemove ', {X: e.x, Y: e.y});
+/*             interactiveLayer.addEventListener('mousemove', (e: any) => {
+             
+              this.log(this.DEBUG,'before handleMousemove mousemove ', {X: e.x, Y: e.y});
 
-            //  this.handleMousemove(e, this.objectBalloon, this.options!.isCustomBalloon!)
+              this.handleMousemove(e, this.objectBalloon, this.options!.isCustomBalloon!)
       
               //  throttle(handleMousemove(e,this.objectBalloon), 11200)
-            })
+            }) */
           }
 
 
@@ -453,15 +454,12 @@ export class ClientSVGEditorNG{
 
         return { scrollX, scrollY }
       } */
-      private  handleMousemove = (
+/*       private  handleMousemove = (
         activeObj: { target: any, x: number, y: number},
         baloon: any,
         isCustomBalloon: boolean
       ) => {
-        /*   console.log(`cursor ev =`, position);
-        console.log(`cursor : X= ${position.x} px : Y= ${position.y} px\n`);*/
-        // console.log(`cursor : baloon =`, baloon, ` \n`)
-        //baloon.show()
+
         const position = { x: activeObj.x, y: activeObj.y }
         this.log(this.DEBUG,'handleMousemove target = ',activeObj.target);
         const targetBBox = activeObj.target.getBoundingClientRect();
@@ -480,16 +478,13 @@ export class ClientSVGEditorNG{
                   this.log(this.DEBUG,'.isBalloonFixed = true');
                   baloon.balloonDom!.style.top = `${targetBBox.top + window.scrollY + this.options.fixedBalloonPosition.y}px`;
                   baloon.balloonDom!.style.left = `${targetBBox.left - balloonBBox.width / 2 + targetBBox.width / 2 + this.options.fixedBalloonPosition.x}px`;
-        /*           baloon.balloonDom!.style.transform = `translate(${
-                    targetBBox.x - balloonBBox.width / 2 + targetBBox.width / 2 + this.options.fixedBalloonPosition.x
-                  }px, ${targetBBox.y + this.options.fixedBalloonPosition.y}px)` */
                 } else {
                   this.log(this.DEBUG,'.isBalloonFixed = false');
                   baloon.balloonDom!.style.transform = `translate(${
                     position.x - getWidthElement / 2 -12
                   }px, ${position.y - 40}px)`
                 }
-      }
+      } */
       private  setPositionBalloon = (
         activeObj: any,
         baloon: any,
