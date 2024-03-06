@@ -12,7 +12,8 @@
     <div class="svgmap" id="map">
 
     </div>
-
+    <button id="btn-1">Select 1</button>
+    <button id="btn-2">Select 2</button>
     <script type="module">
       import {ClientSVGEditorNG} from '../src/clientSVGMap';
       import {dataShops2, dataShopsMTK} from './js/dataitems.ts';
@@ -93,7 +94,7 @@
             isBalloonFixed: true,
             fixedBalloonPosition: {
               x: -12,
-              y: 10
+              y: 3
             },
             isCustomBalloon: false,
         }
@@ -101,17 +102,10 @@
       );
       svgEditor.DEBUG = true;
 
-      const nodeSVG = async () => await svgEditor.init()
+      const nodeSVG = async () =>  svgEditor.init()
     .then((node) => {
         console.log("node ############ ",node)
-/*         const svgEditorPanZoom = svgPanZoom(node, {
-                            zoomEnabled: true,
-                            controlIconsEnabled: true,
-                            fit: true,
-                            center: true,
-                            minZoom: 0.1
-                        });
-            console.log('svgEditorPanZoom', svgEditorPanZoom);  */
+
 
     }).catch((err) => {
         console.error("ERROR nodeSVG = ",err)
@@ -125,17 +119,28 @@
           width: '50%',
           height: '100%'
         }); */
-        svgEditor.insertFromFile('assets/images/map/floor-0.svg')
+        svgEditor.urlsvg=`assets/images/map/floor-0.svg`
+        nodeSVG();
+          svgEditor.setInteractiveLayer();
+/*         svgEditor.insertFromFile('assets/images/map/floor-0.svg')
         .then((res) => {
           console.log('insertFromFile res = ', res)
-/*           svgEditor.setOptions({
-
-            mapTheme:  MapTheme
-          }); */
-          nodeSVG();
-          svgEditor.setInteractiveLayer();
-        });
+        }).catch((err) => {
+          
+        }); */
       }, 2000);
+      document.getElementById('btn-1').addEventListener('click', () => {
+        const data = dataShopsMTK.find((el) => el.id === '1');
+        console.log('dataShopsMTK = ', dataShopsMTK);
+        console.log('data = ', data);
+        svgEditor.showActiveElement(data);
+      });
+      document.getElementById('btn-2').addEventListener('click', () => {
+        const data = dataShopsMTK.find((el) => el.id === '2');
+        console.log('dataShopsMTK = ', dataShopsMTK);
+        console.log('data = ', data);
+        svgEditor.showActiveElement(data);
+      });
     </script>
   </body>
 </html>

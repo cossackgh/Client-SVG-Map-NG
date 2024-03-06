@@ -3,7 +3,7 @@
  * Represents a client SVG editor.
  */
 import { Balloon } from './baloon.ts';
-import { logger } from './logger.ts';
+import { logger, loggerTable } from './logger.ts';
 import type {
 
   DataInteractive,
@@ -20,6 +20,7 @@ export class ClientSVGEditorNG{
      options: any;
      public DEBUG: boolean = false;
      public log = logger;
+     public logT = loggerTable;
      objectBalloon!: Balloon;
      customBalloon: Balloon | null;
     /**
@@ -82,7 +83,7 @@ export class ClientSVGEditorNG{
                 colorBG: '#ffffff',
                 colorTitle: '#5C5C5C',
                 colorDescription: '#5C5C5C',
-                isPositionFixed: false,
+                isPositionFixed: true,
                 borderWidth: '2px',
                 borderColor: '#6391CC',
                 top: 0,
@@ -92,6 +93,7 @@ export class ClientSVGEditorNG{
           this.setInteractiveLayer();
 
           this.log(this.DEBUG,"init() this.objectBalloon",this.objectBalloon);
+          this.log(this.DEBUG,"init() this.objectBalloon getBoundingClientRect",this.objectBalloon.balloonDom?.getBoundingClientRect());
           const getNodeSVG = this.node.querySelector('svg')
           this.log(this.DEBUG,"init() getNodeSVG",getNodeSVG);
           return getNodeSVG
@@ -113,12 +115,17 @@ export class ClientSVGEditorNG{
       this.log(this.DEBUG,"onPathClick path",path);
       const id = path.id
       this.log(this.DEBUG,"onPathClick id",id);
-      const item = this.dataItems.find((item) => item.id === id)
-      this.log(this.DEBUG,"onPathClick item",item);
-      if (item) {
-        this.log(this.DEBUG,"onPathClick item",item);
-        this.showBalloon(item)
+      const itemClick = this.dataItems.find((item) => item.idmap === id)
+      this.log(this.DEBUG,"onPathClick item",itemClick);
+      if (itemClick) {
+        this.log(this.DEBUG,"onPathClick item",itemClick);
+        // go to the page
+        window.open(itemClick.slug, '_self')?.focus()
+         //this.showBalloon(item) 
       }
+    
+        
+      
     }
     /**
      * Handles the mouseover event for a path element.
@@ -201,9 +208,9 @@ export class ClientSVGEditorNG{
           this.log(this.DEBUG,"setInteractiveLayer this.objectBalloon ",this.objectBalloon);
           if (!isMobile() && this.objectBalloon.balloonDom !== null) {
             interactiveLayer.addEventListener('mousemove', (e: any) => {
-              this.log(this.DEBUG,'before handleMousemove mousemove ', {X: e.x, Y: e.y});
+              //this.log(this.DEBUG,'before handleMousemove mousemove ', {X: e.x, Y: e.y});
 
-              this.handleMousemove(e, this.objectBalloon, this.options!.isCustomBalloon!)
+            //  this.handleMousemove(e, this.objectBalloon, this.options!.isCustomBalloon!)
       
               //  throttle(handleMousemove(e,this.objectBalloon), 11200)
             })
@@ -235,16 +242,30 @@ export class ClientSVGEditorNG{
                           }
                         this.onPathClick(e)
                       })
-                      element.addEventListener('mouseover', (e) => {
+                      element.addEventListener('mouseover', (e: any) => {
                         const target = e.target as SVGElement; // Explicitly type the event target as SVGElement
-                        this.log(this.DEBUG,"addEventListener target",target);
+                        this.log(this.DEBUG,"addEventListener mouseover target",target);
+                        this.clearInteractiveLayer();
+                        const signData = this.dataSigns.find((item) => item.pref === target.id.split('-')[0])
+                        const item = this.dataItems.find((item) => item.idmap === target.id)
+                        this.log(this.DEBUG,"addEventListener mouseover this.dataSigns",this.dataSigns);
+                        this.log(this.DEBUG,"addEventListener mouseover signData",signData);
+                        if(signData !== undefined && signData !== null) {
+                          this.showActiveElement(item as DataInteractive)
+                        }
+                        
+                        
                       if (target.tagName.toLowerCase() === 'g' || (target.closest('g') && target.closest('g') !== interactiveLayer)) {
-                        this.log(this.DEBUG,"addEventListener EXIT!???",target.closest('g')?.id);
+                        this.log(this.DEBUG,"addEventListener mouseover EXIT!???",target.closest('g')?.id);
+                        
                         this.onGroupMouseOver(target.closest('g'))
+                        this.setPositionBalloon(target.closest('g'), this.objectBalloon, this.options!.isCustomBalloon!)
                         return;
                         }
-
-                        this.onPathMouseOver(e)
+                        
+                        this.showActiveElement(item as DataInteractive)
+                        /* this.handleMousemove(e, this.objectBalloon, this.options!.isCustomBalloon!)*/
+                        this.onPathMouseOver(e) 
                       })
                       element.addEventListener('mouseout', (e) => {
                         const target = e.target as SVGElement; // Explicitly type the event target as SVGElement
@@ -364,29 +385,7 @@ export class ClientSVGEditorNG{
         baloon.init()
         baloon.hide()
         console.log('createBalloon document IF baloon.balloonDom = ', baloon.balloonDom)
-       /* if (baloon.balloonDom !== null) {
-          //baloon.delete();
-          baloon.render({title: 'TITLE', description: 'DESCRIPTION'});
-        } else {
-          if (baloon.themeBalloonOptions?.isPositionFixed) {
-            const balloonDom = document.createElement('div')
-            balloonDom.style.position = 'fixed'
-            balloonDom.style.top = baloon.themeBalloonOptions?.isPositionFixed
-              ? baloon.themeBalloonOptions.top + 'px'
-              : '0px'
-            balloonDom.style.left = baloon.themeBalloonOptions?.isPositionFixed
-              ? baloon.themeBalloonOptions.left + 'px'
-              : '0px'
-      
-            balloonDom.id = 'BalloonItem'
-            balloonDom.style.display = 'block'
-            balloonDom.style.zIndex = '999999'
-            document.body.appendChild(balloonDom)
-          } else {
-          }
-          baloon.render({title: 'TITLE', description: 'DESCRIPTION'});
-          baloon.hide()
-        } */
+
         return baloon
       }
     /**
@@ -411,7 +410,43 @@ export class ClientSVGEditorNG{
         this.objectBalloon.hide()
       }
     }
-
+    public showActiveElement = (item: DataInteractive) => {
+      this.log(this.DEBUG,"showActiveElement item",item);
+      this.log(this.DEBUG,"showActiveElement this.objectBalloon",this.objectBalloon);
+      if ( item !== null) {
+        this.clearInteractiveLayer();
+        const path = this.node.querySelector('#'+item.idmap)
+        if (path?.tagName !== 'g') {
+          (path as SVGElement).setAttribute('fill', this.options.mapTheme.colorItem.colorBGActive);
+          (path as SVGElement).setAttribute('fill-opacity', this.options.mapTheme.colorItem.opacityActive);
+          
+          (path as SVGElement).setAttribute('stroke', this.options.mapTheme.borderItem.colorBorderActive);
+        }
+        const id = path?.id
+        this.log(this.DEBUG,"onPathMouseOver id",id);
+        this.log(this.DEBUG,"########### Before item",item);
+        if ( item == null) {
+          this.log(this.DEBUG,"###########  item === null",item);
+        }
+        else if (item === undefined) {
+          this.log(this.DEBUG,"###########  item === undefined",item);
+          const signData = this.dataSigns.find((item) => item.pref === id?.split('-')[0])
+          this.log(this.DEBUG,"###########  signData",signData);
+          this.showBalloon({title: signData?.title})
+          this.setPositionBalloon(path,this.objectBalloon, this.options.isCustomBalloon)
+          
+        }
+        else  {
+          this.log(this.DEBUG,"onPathMouseOver item",item);
+          if (item !== undefined){
+            this.showBalloon(item)
+            this.setPositionBalloon(path,this.objectBalloon, this.options.isCustomBalloon)
+            
+          }
+          
+        }
+      }
+    }
 /*       private   getPositionScroll = (element: HTMLElement = this.node) => {
         const scrollX = element.getBoundingClientRect().left
         const scrollY = element.getBoundingClientRect().top
@@ -440,18 +475,47 @@ export class ClientSVGEditorNG{
         this.log(this.DEBUG,'getWidthElement = ', getWidthElement);
         this.log(this.DEBUG,'baloon.themeBalloonOptions = ', baloon.themeBalloonOptions);
         this.log(this.DEBUG,'this.options.isBalloonFixed = ', this.options.isBalloonFixed);
-        
-        if (this.options.isBalloonFixed) {
-          this.log(this.DEBUG,'.isBalloonFixed = true');
-          baloon.balloonDom!.style.transform = `translate(${
-            targetBBox.x - balloonBBox.width / 2 + targetBBox.width / 2 + this.options.fixedBalloonPosition.x
-          }px, ${targetBBox.y + this.options.fixedBalloonPosition.y}px)`
-        } else {
-          this.log(this.DEBUG,'.isBalloonFixed = false');
-          baloon.balloonDom!.style.transform = `translate(${
-            position.x - getWidthElement / 2 -12
-          }px, ${position.y - 40}px)`
-        }
+                
+                if (this.options.isBalloonFixed) {
+                  this.log(this.DEBUG,'.isBalloonFixed = true');
+                  baloon.balloonDom!.style.top = `${targetBBox.top + window.scrollY + this.options.fixedBalloonPosition.y}px`;
+                  baloon.balloonDom!.style.left = `${targetBBox.left - balloonBBox.width / 2 + targetBBox.width / 2 + this.options.fixedBalloonPosition.x}px`;
+        /*           baloon.balloonDom!.style.transform = `translate(${
+                    targetBBox.x - balloonBBox.width / 2 + targetBBox.width / 2 + this.options.fixedBalloonPosition.x
+                  }px, ${targetBBox.y + this.options.fixedBalloonPosition.y}px)` */
+                } else {
+                  this.log(this.DEBUG,'.isBalloonFixed = false');
+                  baloon.balloonDom!.style.transform = `translate(${
+                    position.x - getWidthElement / 2 -12
+                  }px, ${position.y - 40}px)`
+                }
+      }
+      private  setPositionBalloon = (
+        activeObj: any,
+        baloon: any,
+        isCustomBalloon: boolean
+      ) => {
+
+        this.log(this.DEBUG,'setPositionBalloon activeObj = ',activeObj);
+        const targetBBox = activeObj.getBoundingClientRect();
+        const balloonBBox = baloon.balloonDom.getBoundingClientRect();
+        this.log(this.DEBUG,'setPositionBalloon targetBBox = ',targetBBox);
+        this.log(this.DEBUG,'setPositionBalloon balloonBBox = ',balloonBBox);
+        const getWidthElement = isCustomBalloon
+          ? baloon.balloonDom.offsetWidth
+          : baloon.balloonDom.offsetWidth
+        this.log(this.DEBUG,'getWidthElement = ', getWidthElement);
+        this.log(this.DEBUG,'baloon.themeBalloonOptions = ', baloon.themeBalloonOptions);
+        this.log(this.DEBUG,'this.options.isBalloonFixed = ', this.options.isBalloonFixed);
+        const logObj = {left: targetBBox.left, bWidth:balloonBBox.width, ElWidth: targetBBox.width, shiftX:this.options.fixedBalloonPosition.x};
+        this.logT(this.DEBUG,'Param X :',logObj);
+/*           this.log(this.DEBUG,'targetBBox.left =',targetBBox.left);
+          this.log(this.DEBUG,'balloonBBox.width =',balloonBBox.width);
+          this.log(this.DEBUG,'targetBBox.width =',targetBBox.width); */
+          this.log(this.DEBUG,'this.options.fixedBalloonPosition.x =',this.options.fixedBalloonPosition.x);
+          baloon.balloonDom!.style.top = `${targetBBox.top + window.scrollY + this.options.fixedBalloonPosition.y}px`;
+          baloon.balloonDom!.style.left = `${targetBBox.left - balloonBBox.width / 2 + targetBBox.width / 2 + this.options.fixedBalloonPosition.x}px`;
+
       }
 
 }
