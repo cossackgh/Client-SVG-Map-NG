@@ -1,5 +1,11 @@
 # client-svg-map-ng
 
+## 0.1.13
+
+### Patch Changes
+
+- add select Element
+
 ## 0.1.12
 
 ### Patch Changes

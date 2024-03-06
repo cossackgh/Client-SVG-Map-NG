@@ -60,7 +60,7 @@ export class Balloon  {
       if(this.balloonDom === null) {
       const balloon = document.createElement('div')
       balloon.id = this.balloonDomId as string;
-      balloon.style.position = 'fixed'
+      balloon.style.position =  this.themeBalloonOptions?.isPositionFixed?'absolute':'fixed'
       balloon.style.top = '0px'
       balloon.style.left = '0px'
       balloon.style.minWidth = '8%'
