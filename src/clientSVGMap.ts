@@ -238,10 +238,12 @@ export class ClientSVGEditorNG{
                       element.addEventListener('click', (e) => {
                         const target = e.target as SVGElement; // Explicitly type the event target as SVGElement
                         //this.log(this.DEBUG,"setInteractiveLayer click",e);
+                        this.log(this.DEBUG,"click this.options.funcParams ",this.options.funcParams);
                         if (target.tagName.toLowerCase() === 'g' || (target.closest('g') && target.closest('g') !== interactiveLayer)) {
                           return;
                           }
-                        this.onPathClick(e)
+                        this.options.funcClick(e, this.options.funcParams)
+                       // this.onPathClick(e)
                       })
                       element.addEventListener('mouseover', (e: any) => {
                         const target = e.target as SVGElement; // Explicitly type the event target as SVGElement
