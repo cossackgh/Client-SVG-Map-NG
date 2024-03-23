@@ -21,10 +21,16 @@
         return document.getElementById('map');
       }
       function gotoURLClick(dataelement) {
-        console.log('gotoURLClick element = ', dataelement)
+        console.log('gotoURLClick element = ', dataelement.target.id)
         //const geturl = dataelement.getAttribute('data-url')
-
-        window.open(dataelement.slug, '_self')
+        dataShopsMTK.forEach((el) => {
+          console.log('gotoURLClick el = ', el)
+          if (el.idmap === dataelement.target.id) {
+            console.log('IF ID === target ID el = ', el)
+            window.open('http://dev.mariel-tk.ru/shop/'+el.slug, '_self')
+          }
+        })
+        
       }
 
       const MapTheme = {
@@ -89,7 +95,7 @@
             isRemoveUnuseItem: false,
             isHoverEnable: true,
             funcClick: gotoURLClick,
-            funcParams: 'https://www.google.com',
+            //funcParams: 'https://www.google.com',
             mapTheme: MapTheme,
             isBalloonFixed: true,
             fixedBalloonPosition: {
