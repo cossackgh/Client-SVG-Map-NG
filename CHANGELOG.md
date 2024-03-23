@@ -1,5 +1,11 @@
 # client-svg-map-ng
 
+## 0.1.15
+
+### Patch Changes
+
+- fix click function
+
 ## 0.1.14
 
 ### Patch Changes
