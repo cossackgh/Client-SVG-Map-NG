@@ -1,5 +1,25 @@
 import { DataInteractive,  DataInteractiveM} from '../../src/models/base.models'
-const dataShopsMTK: DataInteractiveM[] = [
+
+
+interface DataInteractiveMA {
+  id?: string
+  floor?: string
+  idmap?: string
+  numberbox?: string
+  category?: categoryMA[]
+  title?: string
+  description?: string
+  slug?: string
+  logo?: string
+}
+interface categoryMA {
+
+          id?: string
+          title?: string
+          slug?: string
+
+}
+const dataShopsMTK: DataInteractiveMA[] = [
   {
     id: '0',
     idmap: 's-0b02',
@@ -7,7 +27,7 @@ const dataShopsMTK: DataInteractiveM[] = [
     title: 'Перекресток',
     slug: 'perekrestok',
     description: '0Б02',
-    image: 'http://localhost:3015/mediashops/logo-perekrestok.webp',
+    logo: 'https://api.mariel-tk.ru/mediashops/perekrestok_logo_2022_full.webp',
   },
   {
     id: '1',
@@ -16,7 +36,7 @@ const dataShopsMTK: DataInteractiveM[] = [
     title: 'ВКУСВИЛЛ',
     slug: 'vkusvill',
     description: '0А01',
-    image: 'http://localhost:3015/mediashops/logo-vkusvill.webp',
+    logo: 'https://api.mariel-tk.ru/mediashops/logo-vkusvill.webp',
   },
   {
     id: '2',
@@ -25,6 +45,30 @@ const dataShopsMTK: DataInteractiveM[] = [
     title: 'ФОРА БАНК',
     slug: 'forabank',
     description: '0А06',
+    category: [
+      {
+          "id": "65cc7516a37be8539da58bc8",
+          "title": "Услуги",
+          "slug": "uslugi"
+      }
+  ],
+    logo: 'https://api.mariel-tk.ru/mediashops/logo-fora-bank.webp',
+  },
+  {
+    id: "4",
+    title: "VARDEX",
+    logo: "https://api.mariel-tk.ru/mediashops/logo-vardex.webp",
+    floor: "0",
+    numberbox: "0А07",
+    idmap: "s-0a07",
+    category: [
+        {
+            "id": "6584653bed72c04f5f5207e7",
+            "title": "Табак",
+            "slug": "tabak"
+        }
+    ],
+    slug: "vardex"
   },
 ]
 

@@ -111,7 +111,11 @@
       const nodeSVG = async () =>  svgEditor.init()
     .then((node) => {
         console.log("node ############ ",node)
-
+        svgEditor.palceAllLogos();
+/*         svgEditor.placeImageToPosition('assets/images/map/logo/logo-vardex.svg', 'l-0a07');
+        svgEditor.placeImageToPosition('assets/images/map/logo/logo-perekrestok.svg', 'l-0b02');
+        //svgEditor.placeImageToPosition('assets/images/map/logo/logo-vkusvill.svg', 'l-0a01');
+        svgEditor.placeImageToPosition('http://localhost:3015/mediashops/logo-vkusvill.webp', 'l-0a01'); */
 
     }).catch((err) => {
         console.error("ERROR nodeSVG = ",err)
@@ -127,7 +131,9 @@
         }); */
         svgEditor.urlsvg=`assets/images/map/floor-0.svg`
         nodeSVG();
-          svgEditor.setInteractiveLayer();
+          svgEditor.setInteractiveLayer()
+
+          
 /*         svgEditor.insertFromFile('assets/images/map/floor-0.svg')
         .then((res) => {
           console.log('insertFromFile res = ', res)
