@@ -7,6 +7,7 @@ import { logger, loggerTable } from './logger.ts';
 import type {
 
   DataInteractive,
+  DataInteractiveMA,
   DataOptions,
   //MapTheme,
   BalloonData,
@@ -32,7 +33,7 @@ export class ClientSVGEditorNG{
      *  
      **/
 
-    constructor(private node: HTMLElement, private urlsvg: string, private dataItems: DataInteractive[], private dataSigns: DataSigns[], balloon: Balloon | null = null, options: DataOptions){
+    constructor(private node: HTMLElement, private urlsvg: string, private dataItems: DataInteractiveMA[], private dataSigns: DataSigns[], balloon: Balloon | null = null, options: DataOptions){
       this.log(this.DEBUG,"constructor",node);
       this.node = node;
       this.urlsvg = urlsvg;
@@ -55,7 +56,7 @@ export class ClientSVGEditorNG{
      * Updates the data items of the client SVG map.
      * @param dataItems - An array of DataInteractive objects representing the updated data items.
      */
-    public updateDataItems = (dataItems: DataInteractive[]) => {
+    public updateDataItems = (dataItems: DataInteractiveMA[]) => {
       this.dataItems = dataItems
     }
     /**
@@ -192,7 +193,7 @@ export class ClientSVGEditorNG{
      * Sets the interactive layer for the client SVG map.
      * @returns void
      */
-    public setInteractiveLayer = () => {
+    public setInteractiveLayer = async () => {
         this.log(this.DEBUG,"setInteractiveLayer this.node",this.node);
         this.log(this.DEBUG,"setInteractiveLayer this.options",this.options);
         const interactiveLayer = document.querySelector('#'+this.options.idInteractiveLayer)
@@ -206,8 +207,9 @@ export class ClientSVGEditorNG{
           this.log(this.DEBUG,"setInteractiveLayer elementsOnly",elementsOnly);
           this.log(this.DEBUG,"setInteractiveLayer isMobile",isMobile());
           this.log(this.DEBUG,"setInteractiveLayer this.objectBalloon ",this.objectBalloon);
+          
           if (!isMobile() && this.objectBalloon.balloonDom !== null) {
-/*             interactiveLayer.addEventListener('mousemove', (e: any) => {
+          /*interactiveLayer.addEventListener('mousemove', (e: any) => {
              
               this.log(this.DEBUG,'before handleMousemove mousemove ', {X: e.x, Y: e.y});
 
@@ -449,6 +451,68 @@ export class ClientSVGEditorNG{
           
         }
       }
+    }
+    public placeImageToPosition = (imageUrl: any, idLogo: string, position: any ={x:0,y:0}) => {
+      const getNodeSVG = this.node.querySelector('svg')
+      const getLogoLayer = getNodeSVG?.querySelector('g#points-logo')
+      this.log(this.DEBUG,'getNodeSVG = ',getNodeSVG);
+      this.log(this.DEBUG,'getLogoLayer = ',getLogoLayer);
+      if (!getLogoLayer) {
+        
+        // create svg layer
+        const svgGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        svgGroup.setAttribute("id", "points-logo");
+        getNodeSVG?.appendChild(svgGroup);
+        // create image in svg group
+        const image = document.createElementNS("http://www.w3.org/2000/svg", "image");
+        const getSize = () => {
+          const pointLogo = svgGroup?.querySelector('#l-'+idLogo.split('-')[1])
+          return { width: pointLogo?.getAttribute('width'), height: pointLogo?.getAttribute('height') }
+            }
+        image.setAttribute("id", 'im-'+idLogo);
+        image.setAttribute("href", imageUrl);
+        image.setAttribute("width", `${getSize().width}`);
+        //image.setAttribute("width", "100");
+        //image.setAttribute("height", "30");
+        image.setAttribute("transform", `translate(${position.x}, ${position.y})`);
+        svgGroup.appendChild(image);
+      }
+      else {
+        const getPosition = () => {
+          const pointLogo = getLogoLayer?.querySelector('#l-'+idLogo.split('-')[1])
+          return { x: pointLogo?.getAttribute('x'), y: pointLogo?.getAttribute('y') }
+            }
+        const getSize = () => {
+          const pointLogo = getLogoLayer?.querySelector('#l-'+idLogo.split('-')[1])
+          return { width: pointLogo?.getAttribute('width'), height: pointLogo?.getAttribute('height') }
+            }
+        this.log(this.DEBUG,'getPosition = ',getPosition());
+        const getLogo = getNodeSVG?.querySelector('#im-'+idLogo)
+        if (getLogo) {
+          getLogo.setAttribute("href", imageUrl);
+          getLogo.setAttribute("transform", `translate(${getPosition().x}, ${getPosition().y})`);
+          getLogo.setAttribute("width", `${getSize().width}`);
+        }
+        else {
+          // create image in svg group
+          const image = document.createElementNS("http://www.w3.org/2000/svg", "image");
+          image.setAttribute("id", 'im-'+idLogo);
+          image.setAttribute("href", imageUrl);
+          image.setAttribute("width", `${getSize().width}`);
+          //image.setAttribute("width", "210");
+          //image.setAttribute("height", "30");
+          image.setAttribute("transform", `translate(${getPosition().x}, ${getPosition().y})`);
+          getLogoLayer.appendChild(image);
+        }
+      }
+      
+    }
+    public palceAllLogos = () => {
+      this.dataItems.forEach((item) => {
+        this.log(this.DEBUG,'placeImageToPosition item = ',item);
+        this.placeImageToPosition(item.logo, item.idmap ?? '')
+        //this.placeImageToPosition(item.logo, item.idmap)
+      })
     }
 /*       private   getPositionScroll = (element: HTMLElement = this.node) => {
         const scrollX = element.getBoundingClientRect().left

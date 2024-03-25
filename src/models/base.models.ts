@@ -37,6 +37,25 @@ export interface DataInteractiveM {
     image?: string
   }
 
+  export interface DataInteractiveMA {
+    id?: string
+    floor?: string
+    idmap?: string
+    numberbox?: string
+    category?: categoryMA[]
+    title?: string
+    description?: string
+    slug?: string
+    logo?: string
+  }
+  interface categoryMA {
+            id?: string
+            title?: string
+            slug?: string
+  }
+
+
+
 /**
  * Represents a data interactive object.
  * @pref {string} pref - The prefix of the data.
