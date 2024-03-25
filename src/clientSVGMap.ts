@@ -475,7 +475,9 @@ export class ClientSVGEditorNG{
         //image.setAttribute("width", "100");
         //image.setAttribute("height", "30");
         image.setAttribute("transform", `translate(${position.x}, ${position.y})`);
+        if (imageUrl) {
         svgGroup.appendChild(image);
+        }
       }
       else {
         const getPosition = () => {
@@ -489,9 +491,11 @@ export class ClientSVGEditorNG{
         this.log(this.DEBUG,'getPosition = ',getPosition());
         const getLogo = getNodeSVG?.querySelector('#im-'+idLogo)
         if (getLogo) {
+          if (imageUrl) {
           getLogo.setAttribute("href", imageUrl);
           getLogo.setAttribute("transform", `translate(${getPosition().x}, ${getPosition().y})`);
           getLogo.setAttribute("width", `${getSize().width}`);
+          }
         }
         else {
           // create image in svg group
@@ -502,7 +506,10 @@ export class ClientSVGEditorNG{
           //image.setAttribute("width", "210");
           //image.setAttribute("height", "30");
           image.setAttribute("transform", `translate(${getPosition().x}, ${getPosition().y})`);
-          getLogoLayer.appendChild(image);
+          if (imageUrl) {
+            getLogoLayer.appendChild(image);
+          }
+          
         }
       }
       
