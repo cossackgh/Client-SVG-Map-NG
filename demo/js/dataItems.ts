@@ -70,6 +70,22 @@ const dataShopsMTK: DataInteractiveMA[] = [
     ],
     slug: "vardex"
   },
+  {
+    id: "5",
+    title: "ПРИМЕР",
+    logo: "https://api.mariel-tk.ru/mediashops/logo-vardex.webp",
+    floor: "0",
+    numberbox: "0А05",
+    idmap: "s-0a05",
+    category: [
+        {
+            "id": "6584653bed72c04f5f5207e7",
+            "title": "Табак",
+            "slug": "tabak"
+        }
+    ],
+    slug: "example"
+  },
 ]
 
 const dataShops2: DataInteractive[] = [
