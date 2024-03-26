@@ -1,5 +1,11 @@
 # client-svg-map-ng
 
+## 0.1.18
+
+### Patch Changes
+
+- fix insert logo to map
+
 ## 0.1.17
 
 ### Patch Changes
