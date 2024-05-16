@@ -14,6 +14,8 @@ import type {
   //CastomBalloonOptions,
   BalloonTheme,
   DataSigns,
+  StyleTextSVG,
+  Point2D,
 } from './models/base.models'
 
 export class ClientSVGEditorNG{
@@ -516,11 +518,112 @@ export class ClientSVGEditorNG{
       }
       
     }
+    public placeTextToPosition = (
+      title: string, 
+      idTitle: string, 
+      styleText: StyleTextSVG = {
+        fill: 'black',
+        fontSize: '10px',
+        fontFamily: 'sans-serif',
+        textAnchor: 'start'
+
+      }, 
+      positionText: Point2D = {x:0,y:0}
+    ) => {
+      const getNodeSVG = this.node.querySelector('svg')
+      const getTitleLayer = getNodeSVG?.querySelector('g#title-shops')
+      this.log(this.DEBUG,'getNodeSVG = ',getNodeSVG);
+      this.log(this.DEBUG,'!INFO getTitleLayer = ',getTitleLayer);
+      if (!getTitleLayer) {
+        
+        // create svg layer
+        const svgGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+        this.log(this.DEBUG,'pointTitle = ',idTitle.split('-')[1]);
+        const pointTitle = svgGroup?.querySelector('#t-'+idTitle.split('-')[1])
+        svgGroup.setAttribute("id", "title-shops");
+        getNodeSVG?.appendChild(svgGroup);
+        // create image in svg group
+        const titleEl = document.createElementNS("http://www.w3.org/2000/svg", "text");
+/*         const getSize = () => {
+          
+          return { width: pointTitle?.getAttribute('width'), height: pointTitle?.getAttribute('height') }
+            } */
+        titleEl.setAttribute("id", 'it-'+idTitle);
+        titleEl.textContent = title;
+        titleEl.setAttribute("fill", styleText.fill!);
+        titleEl.setAttribute("text-anchor", styleText.textAnchor!);
+        titleEl.setAttribute("font-size", styleText.fontSize!);
+        titleEl.setAttribute("font-family", styleText.fontFamily!);
+        titleEl.setAttribute("transform", `translate(${positionText.x}, ${positionText.y})`);
+        if (title && pointTitle) {
+        svgGroup.appendChild(titleEl);
+        }
+      }
+      else {
+        const pointTitleB = getTitleLayer?.querySelector('#t-'+idTitle.split('-')[1])
+        const getPosition = () => {
+          return (positionText.x === 0 && positionText.y === 0) ?
+          { x: parseInt(pointTitleB?.getAttribute('x') ?? '0'), y: parseInt(pointTitleB?.getAttribute('y') ?? '0') } :
+          positionText;
+        }
+        const getSize = () => {
+          return { width: pointTitleB?.getAttribute('width') ?? '10', height: pointTitleB?.getAttribute('height') ?? '10' }
+        }
+        let position = getPosition();
+        let size = getSize();
+        this.log(this.DEBUG,'!INFO getPosition = ',position);
+        const getTitle = getNodeSVG?.querySelector('#it-'+idTitle.split('-')[1])
+        if (getTitle) {
+          if (title && pointTitleB) {
+
+            getTitle.textContent = title;
+            getTitle.setAttribute("transform", `translate(${position.x}, ${position.y})`);
+            getTitle.setAttribute("width", `${size.width}`);
+          }
+        }
+        else {
+          // create image in svg group
+          const titleEl = document.createElementNS("http://www.w3.org/2000/svg", "text");
+          let positionXTitle: number = 0
+          if(position){
+            positionXTitle = position.x! ? position.x! + (parseInt(size.width!) || 0) / 2 : 0; // Add null check for size.width and convert it to a number
+          
+          }
+          titleEl.setAttribute("id", 'it-'+idTitle.split('-')[1]);
+          titleEl.textContent = title;
+          titleEl.setAttribute("fill", styleText.fill!);
+          titleEl.setAttribute("text-anchor", styleText.textAnchor!);
+          titleEl.setAttribute("font-size", styleText.fontSize!);
+          titleEl.setAttribute("font-family", styleText.fontFamily!);
+          titleEl.setAttribute("textLength", `${size.width}`);
+          titleEl.setAttribute("transform", `translate(${positionXTitle}, ${position.y! + (parseInt(size.height!) || 0)})`); // Convert position.y and size.height to numbers
+          if (title && pointTitleB) {
+            getTitleLayer.appendChild(titleEl);
+          }
+          
+        }
+      }
+      
+    }
     public palceAllLogos = () => {
       this.dataItems.forEach((item) => {
         this.log(this.DEBUG,'placeImageToPosition item = ',item);
         this.placeImageToPosition(item.logo, item.idmap ?? '')
         //this.placeImageToPosition(item.logo, item.idmap)
+      })
+    }
+    public palceAllTitle = () => {
+      this.dataItems.forEach((item) => {
+        this.log(this.DEBUG,'placeImageToPosition item = ',item);
+        this.placeTextToPosition(item.title ?? '', item.idmap ?? '',
+        {
+          fill: '#000000',
+          fontSize: '6px',
+          fontFamily: 'sans-serif',
+          textAnchor: 'middle'
+        },
+        //{x:300,y:230}
+        )
       })
     }
 /*       private   getPositionScroll = (element: HTMLElement = this.node) => {

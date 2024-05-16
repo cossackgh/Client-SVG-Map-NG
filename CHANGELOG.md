@@ -1,5 +1,11 @@
 # client-svg-map-ng
 
+## 0.1.19
+
+### Patch Changes
+
+- add Place Title Section
+
 ## 0.1.18
 
 ### Patch Changes

@@ -42,7 +42,7 @@ const dataShopsMTK: DataInteractiveMA[] = [
     id: '2',
     idmap: 's-0a06',
     numberbox:"0А06",
-    title: 'ФОРА БАНК',
+    title: 'ФОРА БАНК Mobile',
     slug: 'forabank',
     description: '0А06',
     category: [
@@ -72,7 +72,7 @@ const dataShopsMTK: DataInteractiveMA[] = [
   },
   {
     id: "5",
-    title: "ПРИМЕР",
+    title: "СПОРТИВНОЕ ПИТАНИЕ \"БЕЛКА!\"",
     logo: "https://api.mariel-tk.ru/mediashops/logo-vardex.webp",
     floor: "0",
     numberbox: "0А05",

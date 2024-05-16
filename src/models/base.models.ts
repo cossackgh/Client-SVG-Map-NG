@@ -195,3 +195,39 @@ export interface DataOptions {
     opacity?: number
     opacityActive?: number
   }
+
+  /**
+   * @description
+   * This is the description of the interface @StyleTextSVG
+   * @fontFamily {string} fontFamily - This is the fontFamily of the SVG
+   * @fontSize {string} fontSize - This is the fontSize of the SVG
+   * @fontWeight {string} fontWeight - This is the fontWeight of the SVG
+   * @fontStyle {string} fontStyle - This is the fontStyle of the SVG
+   * @textDecoration {string} textDecoration - This is the textDecoration of the SVG
+   * @textAnchor {string} textAnchor - This is the textAnchor of the SVG
+   * @fill {string} fill - This is the fill of the SVG
+   * @stroke {string} stroke - This is the stroke of the SVG
+   * @strokeWidth {string} strokeWidth - This is the strokeWidth of the SVG
+   */
+  export interface StyleTextSVG {
+    fontFamily?: string
+    fontSize?: string
+    fontWeight?: string
+    fontStyle?: string
+    textDecoration?: string
+    textAnchor?: string
+    fill?: string
+    stroke?: string
+    strokeWidth?: string
+  }
+  /**
+   * @description
+   * This is the description of the interface @Point2D
+   * @x {number} x - This is the x of the Point2D
+   * @y {number} y - This is the y of the Point2D
+   * 
+   * */
+  export interface Point2D {
+    x: number
+    y: number
+  }
