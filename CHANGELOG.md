@@ -1,5 +1,11 @@
 # client-svg-map-ng
 
+## 0.1.20
+
+### Patch Changes
+
+- fix text length
+
 ## 0.1.19
 
 ### Patch Changes

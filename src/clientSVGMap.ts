@@ -595,7 +595,7 @@ export class ClientSVGEditorNG{
           titleEl.setAttribute("text-anchor", styleText.textAnchor!);
           titleEl.setAttribute("font-size", styleText.fontSize!);
           titleEl.setAttribute("font-family", styleText.fontFamily!);
-          titleEl.setAttribute("textLength", `${size.width}`);
+          //titleEl.setAttribute("textLength", `${size.width}`);
           titleEl.setAttribute("transform", `translate(${positionXTitle}, ${position.y! + (parseInt(size.height!) || 0)})`); // Convert position.y and size.height to numbers
           if (title && pointTitleB) {
             getTitleLayer.appendChild(titleEl);
