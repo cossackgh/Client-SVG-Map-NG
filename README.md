@@ -7,3 +7,8 @@ But you can use any other name. Нou must specify this name in the configuration
 ``` npm install client-svg-map-ng```
 ## Demo
 Use case of this library is to create a  [simple interactive map](http://svgedit.za-vod.ru/example/). 
+
+
+```bash
+npx changeset version
+```

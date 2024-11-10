@@ -24,7 +24,7 @@ export class ClientSVGEditorNG{
      public DEBUG: boolean = false;
      public log = logger;
      public logT = loggerTable;
-     objectBalloon!: Balloon;
+     objectBalloon!: Balloon | null;
      customBalloon: Balloon | null;
     /**
      * The constructor for the client SVG map.
@@ -96,7 +96,7 @@ export class ClientSVGEditorNG{
           this.setInteractiveLayer();
 
           this.log(this.DEBUG,"init() this.objectBalloon",this.objectBalloon);
-          this.log(this.DEBUG,"init() this.objectBalloon getBoundingClientRect",this.objectBalloon.balloonDom?.getBoundingClientRect());
+          this.log(this.DEBUG,"init() this.objectBalloon getBoundingClientRect",this.objectBalloon?.balloonDom?.getBoundingClientRect());
           const getNodeSVG = this.node.querySelector('svg')
           this.log(this.DEBUG,"init() getNodeSVG",getNodeSVG);
           return getNodeSVG
@@ -152,27 +152,40 @@ export class ClientSVGEditorNG{
       if ( item == null) {
         this.log(this.DEBUG,"###########  item === null",item);
       }
-      else if (item === undefined) {
+      else if (item === undefined && !this.options!.isCustomBalloon) {
         this.log(this.DEBUG,"###########  item === undefined",item);
         const signData = this.dataSigns.find((item) => item.pref === id.split('-')[0])
         this.log(this.DEBUG,"###########  signData",signData);
         this.showBalloon({title: signData?.title})
+
       }
       else  {
         this.log(this.DEBUG,"onPathMouseOver item",item);
-        if (item !== undefined){
+        if (item !== undefined && !this.options!.isCustomBalloon ){
          
           this.showBalloon(item)
         }
         
       }
+
+      // Создание и диспатчинг кастомного события
+      const customEvent = new CustomEvent('pathMouseOver', {
+        detail: { id, item }
+      });
+      window.dispatchEvent(customEvent);
+
     }
+
+
+
     public onGroupMouseOver = (grp: any) => {
       this.log(this.DEBUG,"onPathMouseOver grp",grp);
       const id = grp.id
       const signData = this.dataSigns.find((item) => item.pref === id.split('-')[0])
         this.log(this.DEBUG,"###########  signData",signData);
-        this.showBalloon({title: signData?.title})
+        if(!this.options!.isCustomBalloon) {
+          this.showBalloon({title: signData?.title})
+        }
     }
     /**
      * Handles the mouseout event for a path element.
@@ -189,6 +202,11 @@ export class ClientSVGEditorNG{
         (path as SVGElement).setAttribute('stroke', this.options.mapTheme.borderItem.colorBorder);
       }
       this.hideBalloon()
+            // Создание и диспатчинг кастомного события
+            const customEvent = new CustomEvent('pathMouseOut', {
+              detail: { path }
+            });
+            window.dispatchEvent(customEvent);
     }
 
     /**
@@ -210,7 +228,7 @@ export class ClientSVGEditorNG{
           this.log(this.DEBUG,"setInteractiveLayer isMobile",isMobile());
           this.log(this.DEBUG,"setInteractiveLayer this.objectBalloon ",this.objectBalloon);
           
-          if (!isMobile() && this.objectBalloon.balloonDom !== null) {
+          if (!isMobile() && this.objectBalloon?.balloonDom !== null) {
           /*interactiveLayer.addEventListener('mousemove', (e: any) => {
              
               this.log(this.DEBUG,'before handleMousemove mousemove ', {X: e.x, Y: e.y});
@@ -384,15 +402,15 @@ export class ClientSVGEditorNG{
        * @returns The balloon.
        */
       private createBalloon = (data: BalloonData, theme: BalloonTheme) => {
-          console.log('createBalloon options = ', data)
+          if(this.DEBUG) console.log('createBalloon options = ', data)
+          if(this.DEBUG) console.log('this.options.mapTheme.isCustomBalloon = ', this.options.isCustomBalloon)
       /*  const balloonDom = document.createElement('div')
         balloonDom.id = 'BalloonItem'
         document.body.appendChild(balloonDom) */
-        let baloon = new Balloon(data, theme)
+        let baloon = new Balloon(data, theme,'dfgID')
         baloon.init()
         baloon.hide()
-        console.log('createBalloon document IF baloon.balloonDom = ', baloon.balloonDom)
-
+        if(this.DEBUG) console.log('createBalloon document IF baloon.balloonDom = ', baloon.balloonDom)
         return baloon
       }
     /**
@@ -404,8 +422,8 @@ export class ClientSVGEditorNG{
       this.log(this.DEBUG,"showBalloon item",item);
       this.log(this.DEBUG,"showBalloon this.objectBalloon",this.objectBalloon);
       if ( item !== null) {
-        this.objectBalloon.show()
-        this.objectBalloon.render({title: item.title, image: item.logo!, slug: item.slug!, description: item.description!})
+        this.objectBalloon?.show()
+        this.objectBalloon?.render({title: item.title, image: item.logo!, slug: item.slug!, description: item.description!})
       }
     }
     /**
@@ -417,7 +435,7 @@ export class ClientSVGEditorNG{
         this.objectBalloon.hide()
       }
     }
-    public showActiveElement = (item: DataInteractiveMA) => {
+    public showActiveElement = (item: DataInteractiveMA, showBalloon?: boolean) => {
       this.log(this.DEBUG,"showActiveElement item",item);
       this.log(this.DEBUG,"showActiveElement this.objectBalloon",this.objectBalloon);
       if ( item !== null) {
@@ -434,26 +452,73 @@ export class ClientSVGEditorNG{
         this.log(this.DEBUG,"########### Before item",item);
         if ( item == null) {
           this.log(this.DEBUG,"###########  item === null",item);
+          return;
         }
         else if (item === undefined) {
           this.log(this.DEBUG,"###########  item === undefined",item);
           const signData = this.dataSigns.find((item) => item.pref === id?.split('-')[0])
           this.log(this.DEBUG,"###########  signData",signData);
-          this.showBalloon({title: signData?.title})
-          this.setPositionBalloon(path,this.objectBalloon, this.options.isCustomBalloon)
+          if(!this.options.isCustomBalloon  && showBalloon || showBalloon === undefined) {
+            this.showBalloon({title: signData?.title})
+            
+          }
+          else {
+            this.hideBalloon()
+          }
+          if(showBalloon || showBalloon === undefined) {
+            this.log(this.DEBUG,"###########  POSITION B => ",path);
+            this.setPositionBalloon(path,this.objectBalloon, this.options.isCustomBalloon)
+          }
           
         }
         else  {
           this.log(this.DEBUG,"onPathMouseOver item",item);
           if (item !== undefined){
-            this.showBalloon(item)
-            this.setPositionBalloon(path,this.objectBalloon, this.options.isCustomBalloon)
-            
+            if(!this.options.isCustomBalloon && showBalloon || showBalloon === undefined){
+              this.showBalloon(item)
+              
+            }
+            else {
+              this.hideBalloon()
+            }
+            if(showBalloon || showBalloon === undefined) {
+              this.log(this.DEBUG,"###########  POSITION B2 => ",path);
+              this.setPositionBalloon(path,this.objectBalloon, this.options.isCustomBalloon)
+            }
           }
           
         }
       }
     }
+    public showActiveElements = (items: DataInteractiveMA[]) => {
+      this.log(this.DEBUG,"showActiveElement item",items);
+      this.log(this.DEBUG,"showActiveElement this.objectBalloon",this.objectBalloon);
+      if ( items !== null) {
+        this.clearInteractiveLayer();
+        this.hideBalloon();
+        items.forEach((item) => {
+
+        const path = this.node.querySelector('#'+item.idmap)
+        if (path?.tagName !== 'g') {
+          (path as SVGElement).setAttribute('fill', this.options.mapTheme.colorItem.colorBGActive);
+          (path as SVGElement).setAttribute('fill-opacity', this.options.mapTheme.colorItem.opacityActive);
+          
+          (path as SVGElement).setAttribute('stroke', this.options.mapTheme.borderItem.colorBorderActive);
+        }
+        const id = path?.id
+        this.log(this.DEBUG,"onPathMouseOver id",id);
+        this.log(this.DEBUG,"########### Before item",items);
+        if ( items == null) {
+          this.log(this.DEBUG,"###########  item === null",items);
+          return;
+        }
+      })
+          
+        }
+
+      
+    }
+
     public placeImageToPosition = (imageUrl: any, idLogo: string, position: any ={x:0,y:0}) => {
       const getNodeSVG = this.node.querySelector('svg')
       const getLogoLayer = getNodeSVG?.querySelector('g#points-logo')
@@ -688,11 +753,19 @@ export class ClientSVGEditorNG{
           this.log(this.DEBUG,'this.options.fixedBalloonPosition.x =',this.options.fixedBalloonPosition.x);
           baloon.balloonDom!.style.top = `${targetBBox.top + window.scrollY + this.options.fixedBalloonPosition.y}px`;
           baloon.balloonDom!.style.left = `${targetBBox.left - balloonBBox.width / 2 + targetBBox.width / 2 + this.options.fixedBalloonPosition.x}px`;
-
+                      
+          // Создание и диспатчинг кастомного события
+          const customEvent = new CustomEvent('positionBalloon', {
+              detail: { top: targetBBox.top + window.scrollY + this.options.fixedBalloonPosition.y, left: targetBBox.left - balloonBBox.width / 2 + targetBBox.width / 2 + this.options.fixedBalloonPosition.x }
+            });
+          window.dispatchEvent(customEvent);
+      }
+      public dispose= () => {
+        this.node.innerHTML = ''
+        this.objectBalloon?.dispose()
       }
 
 }
-
 
 const isMobile = () => {
     let check = false

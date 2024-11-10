@@ -19,6 +19,74 @@ interface categoryMA {
           slug?: string
 
 }
+const dataShopsRiviera: DataInteractiveMA[] = [
+  {
+    id: '0',
+    idmap: 'sh-1032',
+    //numberbox:"0Б02",
+    title: 'Gloria Jeans',
+    slug: 'gloriajeans',
+    //description: '0Б02',
+    logo: 'https://riviera.su/storage/app/uploads/public/514/ce6/fd0/thumb__120_120_0_0_crop.jpg',
+  },
+  {
+    id: '1',
+    idmap: 'sh-1007',
+    //numberbox:"0А01",
+    title: 'Zarina',
+    slug: 'zarina',
+    //description: '0А01',
+    logo: 'https://riviera.su/storage/app/uploads/public/75b/a20/0d5/thumb__120_120_0_0_crop.jpg',
+  },
+  {
+    id: '2',
+    idmap: 'sh-1004',
+    //numberbox:"0А06",
+    title: 'LIMÉ',
+    slug: 'lime',
+    //description: '0А06',
+    category: [
+      {
+          "id": "65cc7516a37be8539da58bc8",
+          "title": "Услуги",
+          "slug": "uslugi"
+      }
+  ],
+    logo: 'https://riviera.su/storage/app/uploads/public/1f3/232/ca9/thumb__120_120_0_0_crop.jpg',
+  },
+  {
+    id: "4",
+    title: "VARDEX",
+    logo: "https://api.mariel-tk.ru/mediashops/logo-vardex.webp",
+    floor: "0",
+    numberbox: "0А07",
+    idmap: "s-0a07",
+    category: [
+        {
+            "id": "6584653bed72c04f5f5207e7",
+            "title": "Табак",
+            "slug": "tabak"
+        }
+    ],
+    slug: "vardex"
+  },
+  {
+    id: "5",
+    title: "СПОРТИВНОЕ ПИТАНИЕ \"БЕЛКА!\"",
+    logo: "https://api.mariel-tk.ru/mediashops/logo-vardex.webp",
+    floor: "0",
+    numberbox: "0А05",
+    idmap: "s-0a05",
+    category: [
+        {
+            "id": "6584653bed72c04f5f5207e7",
+            "title": "Табак",
+            "slug": "tabak"
+        }
+    ],
+    slug: "example"
+  },
+]
 const dataShopsMTK: DataInteractiveMA[] = [
   {
     id: '0',
@@ -5105,6 +5173,7 @@ const ExampleSVG =
 export {
   dataShops,
   dataShopsMTK,
+  dataShopsRiviera,
   dataShops2,
   dataShops3,
   dataShops4Floor0,

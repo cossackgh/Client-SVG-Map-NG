@@ -23,7 +23,7 @@ export class Balloon  {
       this.delete()
       this.balloonDomId = this.balloonDomId ?? 'BalloonItem'; // Ensure balloonDomId is a non-null string
       this.balloonDom = document.querySelector("#"+this.balloonDomId)
-      console.log('this.balloonDom constructor = ', this.balloonDom)
+      //console.log('this.balloonDom constructor = ', this.balloonDom)
       if (this.balloonDom === null) {
         this.render(
           {
@@ -36,27 +36,32 @@ export class Balloon  {
     }
     public delete() {
       if(this.balloonDom !== null) {
-        console.log('balloon delete() ')
+        //console.log('balloon delete() ')
         this.balloonDom.remove()
       }
     }
-  
+    public dispose() {
+      if(this.balloonDom !== null) {
+        //console.log('balloon dispose() ')
+        this.balloonDom.remove()
+      }
+    }
     public hide() {
-        console.log('this.balloonDom = ', this.balloonDom)  
+        //console.log('this.balloonDom = ', this.balloonDom)  
         if(this.balloonDom !== null){
         this.balloonDom.style.display = 'none'
         }
     }
     public show() {
-      console.log('SHOW ###### = ', this.balloonDom)
+      //console.log('SHOW ###### = ', this.balloonDom)
       if(this.balloonDom !== null){
       this.balloonDom.style.display = 'block'
       }
     }
   
     public render(dataRender: any, templateHTML: string = '') {
-      console.log('this.balloonDom = ', this.balloonDom)
-      console.log('dataRender = ', dataRender)
+      //console.log('this.balloonDom = ', this.balloonDom)
+      //console.log('dataRender = ', dataRender)
       if(this.balloonDom === null) {
       const balloon = document.createElement('div')
       balloon.id = this.balloonDomId as string;
@@ -76,8 +81,8 @@ export class Balloon  {
       return true
     }
     defaultRender(dataRender: any) {
-      console.log('defaultRender dataRender = ', dataRender)
-      console.log('defaultRender dataRender.image = ', dataRender.image)
+      //console.log('defaultRender dataRender = ', dataRender)
+      //console.log('defaultRender dataRender.image = ', dataRender.image)
       this.balloonDom!.innerHTML = ``
       if (dataRender.description !== undefined && dataRender.description !== '') {
 

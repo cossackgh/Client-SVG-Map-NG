@@ -5,25 +5,47 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite + TS</title>
+    <link rel="stylesheet" href="mycss.css">
   </head>
   <body>
-    <div id="app"></div>
-    <img src="assets/images/vite.svg" alt="vite svg" srcset="" width="100">
-    <div class="svgmap" id="map">
+    <div class="screen">
+      <div id="app"></div>
+      <img src="assets/images/vite.svg" alt="vite svg" srcset="" width="100" class="logotype">
+      <div class="svgmap" id="map">
 
+      </div>
+      <section class="section_button">
+        <button id="btn-1">Select 1</button>
+        <button id="btn-2">Select 2</button>  
+        <button id="btn-3">Select 3</button>  
+      </section>
+
+      
     </div>
-    <button id="btn-1">Select 1</button>
-    <button id="btn-2">Select 2</button>
+    <div class="customB hide" id="customBalloon">
+      <div class="customB__content">
+        <div class="balloon-title" id="b-title">Title</div>
+        <div class="balloon-text" id="b-text">Text</div>
+        <a href="/" id="b-button" target="_blank"><div class="balloon-btn" >Перейти</div></a> 
+      </div>
+
+    </div>    
     <script type="module">
+      import { Balloon } from '../src/baloon';
       import {ClientSVGEditorNG} from '../src/clientSVGMap';
-      import {dataShops2, dataShopsMTK} from './js/dataitems.ts';
+      import {dataShops2, dataShopsMTK,dataShopsRiviera} from './js/dataitems.ts';
+      const isCustomB = false;
       const getSvgNode = () => {
         return document.getElementById('map');
+      }
+      const getBalloonNode = () => {
+        return document.getElementById('customBalloon');
       }
       function gotoURLClick(dataelement) {
         console.log('gotoURLClick element = ', dataelement.target.id)
         //const geturl = dataelement.getAttribute('data-url')
-        dataShopsMTK.forEach((el) => {
+        //dataShopsMTK.forEach((el) => {
+          dataShopsRiviera.forEach((el) => {
           console.log('gotoURLClick el = ', el)
           if (el.idmap === dataelement.target.id) {
             console.log('IF ID === target ID el = ', el)
@@ -38,10 +60,10 @@
         colorItem: {
           colorBG: '#222',
           colorBorder: '#000',
-          colorBGActive: '#ffffff',
+          colorBGActive: '#C22869',
           colorBorderActive: '#6391CC',
           opacity: 0.1,
-          opacityActive: 0.1
+          opacityActive: 0.8
         },
         borderItem: {
           isBorder: true,
@@ -82,10 +104,24 @@
         },
         
       ]
+      const BTheme = {
+        colorBG: '#fff',
+        colorTitle: '#000',
+        colorDescription: '#e00',
+        isPositionFixed: true,
+        borderWidth: '3px',
+        borderColor: '#000',
+        top: 0,
+        left: 0
+      }
+  const DomCustomBaloon = document.getElementById('customBalloon');
+      const customBalloon = new Balloon(BTheme,DomCustomBaloon,'customBalloon') 
+      customBalloon.init()
       const svgEditor = new ClientSVGEditorNG(
          getSvgNode(),
          'assets/images/vite.svg',
-         dataShopsMTK,
+         //dataShopsMTK,
+         dataShopsRiviera,
          signTitles,
          null,
          {
@@ -102,11 +138,11 @@
               x: -12,
               y: 3
             },
-            isCustomBalloon: false,
+            isCustomBalloon: isCustomB,
         }
         
       );
-      svgEditor.DEBUG = true;
+      svgEditor.DEBUG = false;
 
       const nodeSVG = async () =>  svgEditor.init()
     .then((node) => {
@@ -130,7 +166,8 @@
           width: '50%',
           height: '100%'
         }); */
-        svgEditor.urlsvg=`assets/images/map/floor-0.svg`
+        //svgEditor.urlsvg=`assets/images/map/floor-0.svg`
+        svgEditor.urlsvg=`assets/images/map/Riviera-floor1.svg`
         nodeSVG();
           svgEditor.setInteractiveLayer()
 
@@ -143,17 +180,66 @@
         }); */
       }, 2000);
       document.getElementById('btn-1').addEventListener('click', () => {
-        const data = dataShopsMTK.find((el) => el.id === '1');
+        //const data = dataShopsMTK.find((el) => el.id === '1');
+        const data = dataShopsRiviera.find((el) => el.id === '1');
         console.log('dataShopsMTK = ', dataShopsMTK);
         console.log('data = ', data);
-        svgEditor.showActiveElement(data);
+        svgEditor.showActiveElement(data, true);
       });
       document.getElementById('btn-2').addEventListener('click', () => {
-        const data = dataShopsMTK.find((el) => el.id === '2');
+        //const data = dataShopsMTK.find((el) => el.id === '2');
+        const data = dataShopsRiviera.find((el) => el.id === '2');
         console.log('dataShopsMTK = ', dataShopsMTK);
         console.log('data = ', data);
-        svgEditor.showActiveElement(data);
+        svgEditor.showActiveElement(data,false);
       });
+      document.getElementById('btn-3').addEventListener('click', () => {
+        //const data = dataShopsMTK.find((el) => el.id === '2');
+        const data = dataShopsRiviera;
+        console.log('dataShopsMTK All = ', dataShopsMTK);
+        svgEditor.showActiveElements(data);
+      });
+
+
+      window.addEventListener('pathMouseOver', (event) => {
+        if (!isCustomB) return;
+        const customB = getBalloonNode();
+        
+        console.log('Path Mouse Over Event:', event.detail);
+        console.log('getBalloonNode:', customB);
+        
+        const balloonTitle = customB.querySelector('#b-title');
+        const balloonText = customB.querySelector('#b-text');
+        const balloonButton = customB.querySelector('#b-button');
+        console.log('getBalloonNode title:', balloonTitle);
+        console.log('getBalloonNode link:', balloonButton);
+        balloonButton.setAttribute('href', 'https://qa.riviera.su/shops/'+event.detail.item.slug); // Изменение атрибута href
+        balloonTitle.textContent = event.detail.item.title;
+        customB.classList.remove('hide');
+        const customBB = customB.getBoundingClientRect();
+        console.log('customBB 2:', customBB);
+    });
+      window.addEventListener('pathMouseOut', (event) => {
+        if (!isCustomB) return;
+        const customB = getBalloonNode();
+        console.log('Path Mouse Out Event:', event.detail);
+        console.log('getBalloonNode:', customB);
+        customB.classList.add('hide');
+    });
+      window.addEventListener('positionBalloon', (event) => {
+        if (!isCustomB) return;
+        const customB = getBalloonNode();
+        const customBB = customB.getBoundingClientRect();
+        console.log('customBB 1:', customBB);
+        console.log('positionBalloon Event:', event.detail);
+        console.log('getBalloonNode:', customB);
+        const topB = event.detail.top+(-60);
+        const leftB = event.detail.left+(0);
+        console.log('positionBalloon topB:', topB);
+        console.log('positionBalloon leftB:', leftB);
+        customB.style.top = `${topB}px`;
+        customB.style.left = `${leftB}px`;
+    });
     </script>
   </body>
 </html>

@@ -1,5 +1,11 @@
 # client-svg-map-ng
 
+## 0.1.21
+
+### Patch Changes
+
+- add some public function
+
 ## 0.1.20
 
 ### Patch Changes
