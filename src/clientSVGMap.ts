@@ -36,6 +36,7 @@ export class ClientSVGEditorNG{
      **/
 
     constructor(private node: HTMLElement, private urlsvg: string, private dataItems: DataInteractiveMA[], private dataSigns: DataSigns[], balloon: Balloon | null = null, options: DataOptions){
+      this.log(this.DEBUG,"version = 0.1.23");
       this.log(this.DEBUG,"constructor",node);
       this.node = node;
       this.urlsvg = urlsvg;
