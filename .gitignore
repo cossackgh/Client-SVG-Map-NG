@@ -1,5 +1,6 @@
 
 *.local
+README_DEV.md
 
 # Editor directories and files
 .vscode/*

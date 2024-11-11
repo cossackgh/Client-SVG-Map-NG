@@ -1,5 +1,11 @@
 # client-svg-map-ng
 
+## 0.1.23
+
+### Patch Changes
+
+- Add version into console log
+
 ## 0.1.22
 
 ### Patch Changes

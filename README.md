@@ -8,21 +8,3 @@ But you can use any other name. Нou must specify this name in the configuration
 ## Demo
 Use case of this library is to create a  [simple interactive map](http://svgedit.za-vod.ru/example/). 
 
-Add some fix or feature
-
-
-```bash
-npx changeset version
-```
-Push to GitHub
-
-Build Library
-```bash
-npm run build1
-```
-Publish Changs to NPM
-
-Enter 6 digit pass from app Android
-```bash
-npx changeset publish
-```
