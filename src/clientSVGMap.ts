@@ -36,7 +36,7 @@ export class ClientSVGEditorNG{
      **/
 
     constructor(private node: HTMLElement, private urlsvg: string, private dataItems: DataInteractiveMA[], private dataSigns: DataSigns[], balloon: Balloon | null = null, options: DataOptions){
-      this.log(this.DEBUG,"version = 0.1.23");
+      this.log(this.DEBUG,"version = 0.1.26");
       this.log(this.DEBUG,"constructor",node);
       this.node = node;
       this.urlsvg = urlsvg;
@@ -44,6 +44,7 @@ export class ClientSVGEditorNG{
       this.dataItems = dataItems;
       this.dataSigns = dataSigns;
       this.customBalloon = balloon;
+      this.DEBUG = options.isDebug??false;
 
 
       this.log(this.DEBUG,"constructor this.node",this.node);
@@ -491,15 +492,22 @@ export class ClientSVGEditorNG{
         }
       }
     }
-    public showActiveElements = (items: DataInteractiveMA[]) => {
+    public showActiveElements = (items: string[]) => {
       this.log(this.DEBUG,"showActiveElement item",items);
       this.log(this.DEBUG,"showActiveElement this.objectBalloon",this.objectBalloon);
       if ( items !== null) {
         this.clearInteractiveLayer();
         this.hideBalloon();
         items.forEach((item) => {
-
-        const path = this.node.querySelector('#'+item.idmap)
+        if ( item == null) {
+            this.log(this.DEBUG,"###########  item === null",items);
+            return;
+          }
+        const path = this.node.querySelector('#'+item)
+        if(path === undefined){
+          this.log(this.DEBUG,"###########  path === undefined",path);
+          return;
+        }
         if (path?.tagName !== 'g') {
           (path as SVGElement).setAttribute('fill', this.options.mapTheme.colorItem.colorBGActive);
           (path as SVGElement).setAttribute('fill-opacity', this.options.mapTheme.colorItem.opacityActive);
@@ -507,12 +515,9 @@ export class ClientSVGEditorNG{
           (path as SVGElement).setAttribute('stroke', this.options.mapTheme.borderItem.colorBorderActive);
         }
         const id = path?.id
-        this.log(this.DEBUG,"onPathMouseOver id",id);
+        this.log(this.DEBUG,"showActiveElements id",id);
         this.log(this.DEBUG,"########### Before item",items);
-        if ( items == null) {
-          this.log(this.DEBUG,"###########  item === null",items);
-          return;
-        }
+ 
       })
           
         }
