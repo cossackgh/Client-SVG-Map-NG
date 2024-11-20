@@ -498,8 +498,15 @@ export class ClientSVGEditorNG{
         this.clearInteractiveLayer();
         this.hideBalloon();
         items.forEach((item) => {
-
+        if ( item == null) {
+            this.log(this.DEBUG,"###########  item === null",items);
+            return;
+          }
         const path = this.node.querySelector('#'+item)
+        if(path === undefined){
+          this.log(this.DEBUG,"###########  path === undefined",path);
+          return;
+        }
         if (path?.tagName !== 'g') {
           (path as SVGElement).setAttribute('fill', this.options.mapTheme.colorItem.colorBGActive);
           (path as SVGElement).setAttribute('fill-opacity', this.options.mapTheme.colorItem.opacityActive);
@@ -507,12 +514,9 @@ export class ClientSVGEditorNG{
           (path as SVGElement).setAttribute('stroke', this.options.mapTheme.borderItem.colorBorderActive);
         }
         const id = path?.id
-        this.log(this.DEBUG,"onPathMouseOver id",id);
+        this.log(this.DEBUG,"showActiveElements id",id);
         this.log(this.DEBUG,"########### Before item",items);
-        if ( items == null) {
-          this.log(this.DEBUG,"###########  item === null",items);
-          return;
-        }
+ 
       })
           
         }

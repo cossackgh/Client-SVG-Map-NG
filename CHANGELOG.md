@@ -1,5 +1,11 @@
 # client-svg-map-ng
 
+## 0.1.25
+
+### Patch Changes
+
+- fix: add check empty path in showActiveElements
+
 ## 0.1.24
 
 ### Patch Changes
