@@ -77,24 +77,26 @@ export class ClientSVGEditorNG{
           //this.setOptions();
 
           // Create a balloon
+            if(!this.options.isCustomBalloon) {
+                this.objectBalloon = this.createBalloon(
+                  {
+                    title: 'TITLE#################',
+                  // description: 'DESCRIPTION',
+                    //image: 'IMAGE',
+                  },
+                  {
+                    colorBG: '#ffffff',
+                    colorTitle: '#5C5C5C',
+                    colorDescription: '#5C5C5C',
+                    isPositionFixed: true,
+                    borderWidth: '2px',
+                    borderColor: '#6391CC',
+                    top: 0,
+                    left: 0,
+                  }
+                )              
+            }
           
-            this.objectBalloon = this.createBalloon(
-              {
-                title: 'TITLE#################',
-               // description: 'DESCRIPTION',
-                //image: 'IMAGE',
-              },
-              {
-                colorBG: '#ffffff',
-                colorTitle: '#5C5C5C',
-                colorDescription: '#5C5C5C',
-                isPositionFixed: true,
-                borderWidth: '2px',
-                borderColor: '#6391CC',
-                top: 0,
-                left: 0,
-              }
-            )          
           this.setInteractiveLayer();
 
           this.log(this.DEBUG,"init() this.objectBalloon",this.objectBalloon);
@@ -414,6 +416,9 @@ export class ClientSVGEditorNG{
       private createBalloon = (data: BalloonData, theme: BalloonTheme) => {
           if(this.DEBUG) console.log('createBalloon options = ', data)
           if(this.DEBUG) console.log('this.options.mapTheme.isCustomBalloon = ', this.options.isCustomBalloon)
+            if(this.options.isCustomBalloon) {
+              return null;
+            }
       /*  const balloonDom = document.createElement('div')
         balloonDom.id = 'BalloonItem'
         document.body.appendChild(balloonDom) */
