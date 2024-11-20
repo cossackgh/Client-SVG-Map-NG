@@ -77,7 +77,7 @@ export class ClientSVGEditorNG{
           //this.setOptions();
 
           // Create a balloon
-            if(!this.options.isCustomBalloon) {
+           
                 this.objectBalloon = this.createBalloon(
                   {
                     title: 'TITLE#################',
@@ -95,7 +95,7 @@ export class ClientSVGEditorNG{
                     left: 0,
                   }
                 )              
-            }
+            
           
           this.setInteractiveLayer();
 
@@ -465,6 +465,7 @@ export class ClientSVGEditorNG{
         const id = path?.id
         this.log(this.DEBUG,"onPathMouseOver id",id);
         this.log(this.DEBUG,"########### Before item",item);
+        this.setPositionBalloon(path,this.objectBalloon, this.options.isCustomBalloon)
         if ( item == null) {
           this.log(this.DEBUG,"###########  item === null",item);
           return;
@@ -482,7 +483,7 @@ export class ClientSVGEditorNG{
           }
           if(showBalloon || showBalloon === undefined) {
             this.log(this.DEBUG,"###########  POSITION B => ",path);
-            this.setPositionBalloon(path,this.objectBalloon, this.options.isCustomBalloon)
+            //this.setPositionBalloon(path,this.objectBalloon, this.options.isCustomBalloon)
           }
           
         }
@@ -498,7 +499,7 @@ export class ClientSVGEditorNG{
             }
             if(showBalloon || showBalloon === undefined) {
               this.log(this.DEBUG,"###########  POSITION B2 => ",path);
-              this.setPositionBalloon(path,this.objectBalloon, this.options.isCustomBalloon)
+              //this.setPositionBalloon(path,this.objectBalloon, this.options.isCustomBalloon)
             }
           }
           

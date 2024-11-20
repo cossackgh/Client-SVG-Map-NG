@@ -1,5 +1,11 @@
 # client-svg-map-ng
 
+## 0.1.30
+
+### Patch Changes
+
+- fix: fix create Ballon if is Cistom Balloon
+
 ## 0.1.29
 
 ### Patch Changes
