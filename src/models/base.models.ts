@@ -86,6 +86,7 @@ export interface DataSigns {
  * @returns void
  */
 export interface DataOptions {
+    isDebug?: boolean;
     title?: string;
     colorBG?: string;
     idInteractiveLayer?: string;

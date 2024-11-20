@@ -1,5 +1,11 @@
 # client-svg-map-ng
 
+## 0.1.26
+
+### Patch Changes
+
+- fix: add DEBUG flag
+
 ## 0.1.25
 
 ### Patch Changes
