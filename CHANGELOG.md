@@ -1,5 +1,11 @@
 # client-svg-map-ng
 
+## 0.1.31
+
+### Patch Changes
+
+- fix: check is Custom Ballon in return position
+
 ## 0.1.30
 
 ### Patch Changes

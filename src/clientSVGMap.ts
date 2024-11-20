@@ -757,28 +757,49 @@ export class ClientSVGEditorNG{
       ) => {
 
         this.log(this.DEBUG,'setPositionBalloon activeObj = ',activeObj);
+        let returnCustomEvent = {
+          top:0,
+          left:0
+        }
         const targetBBox = activeObj.getBoundingClientRect();
-        const balloonBBox = baloon.balloonDom.getBoundingClientRect();
-        this.log(this.DEBUG,'setPositionBalloon targetBBox = ',targetBBox);
-        this.log(this.DEBUG,'setPositionBalloon balloonBBox = ',balloonBBox);
-        const getWidthElement = isCustomBalloon
-          ? baloon.balloonDom.offsetWidth
-          : baloon.balloonDom.offsetWidth
-        this.log(this.DEBUG,'getWidthElement = ', getWidthElement);
-        this.log(this.DEBUG,'baloon.themeBalloonOptions = ', baloon.themeBalloonOptions);
-        this.log(this.DEBUG,'this.options.isBalloonFixed = ', this.options.isBalloonFixed);
-        const logObj = {left: targetBBox.left, bWidth:balloonBBox.width, ElWidth: targetBBox.width, shiftX:this.options.fixedBalloonPosition.x};
-        this.logT(this.DEBUG,'Param X :',logObj);
+        if (isCustomBalloon) {
+          const balloonBBox = baloon.balloonDom.getBoundingClientRect();
+          this.log(this.DEBUG,'setPositionBalloon balloonBBox = ',balloonBBox);
+          const getWidthElement = isCustomBalloon
+            ? baloon.balloonDom.offsetWidth
+            : baloon.balloonDom.offsetWidth
+          this.log(this.DEBUG,'getWidthElement = ', getWidthElement);
+          this.log(this.DEBUG,'baloon.themeBalloonOptions = ', baloon.themeBalloonOptions);
+          this.log(this.DEBUG,'this.options.isBalloonFixed = ', this.options.isBalloonFixed);          
+          const logObj = {left: targetBBox.left, bWidth:balloonBBox.width, ElWidth: targetBBox.width, shiftX:this.options.fixedBalloonPosition.x};
+          this.logT(this.DEBUG,'Param X :',logObj);  
 /*           this.log(this.DEBUG,'targetBBox.left =',targetBBox.left);
           this.log(this.DEBUG,'balloonBBox.width =',balloonBBox.width);
           this.log(this.DEBUG,'targetBBox.width =',targetBBox.width); */
           this.log(this.DEBUG,'this.options.fixedBalloonPosition.x =',this.options.fixedBalloonPosition.x);
           baloon.balloonDom!.style.top = `${targetBBox.top + window.scrollY + this.options.fixedBalloonPosition.y}px`;
-          baloon.balloonDom!.style.left = `${targetBBox.left - balloonBBox.width / 2 + targetBBox.width / 2 + this.options.fixedBalloonPosition.x}px`;
+          baloon.balloonDom!.style.left = `${targetBBox.left - balloonBBox.width / 2 + targetBBox.width / 2 + this.options.fixedBalloonPosition.x}px`;          
+          returnCustomEvent = { top: targetBBox.top + window.scrollY + this.options.fixedBalloonPosition.y, left: targetBBox.left - balloonBBox.width / 2 + targetBBox.width / 2 + this.options.fixedBalloonPosition.x }
+        }
+        else{
+          const logObj = {left: targetBBox.left, bWidth:10, ElWidth: targetBBox.width, shiftX:this.options.fixedBalloonPosition.x};
+          this.logT(this.DEBUG,'Param X :',logObj);  
+/*           this.log(this.DEBUG,'targetBBox.left =',targetBBox.left);
+          this.log(this.DEBUG,'balloonBBox.width =',balloonBBox.width);
+          this.log(this.DEBUG,'targetBBox.width =',targetBBox.width); */
+          this.log(this.DEBUG,'this.options.fixedBalloonPosition.x =',this.options.fixedBalloonPosition.x);
+          returnCustomEvent = { top: targetBBox.top + window.scrollY + this.options.fixedBalloonPosition.y, left: targetBBox.left - 5 + targetBBox.width / 2 + this.options.fixedBalloonPosition.x }
+          
+        }
+        
+        this.log(this.DEBUG,'setPositionBalloon targetBBox = ',targetBBox);
+
+
+
                       
           // Создание и диспатчинг кастомного события
           const customEvent = new CustomEvent('positionBalloon', {
-              detail: { top: targetBBox.top + window.scrollY + this.options.fixedBalloonPosition.y, left: targetBBox.left - balloonBBox.width / 2 + targetBBox.width / 2 + this.options.fixedBalloonPosition.x }
+              detail: returnCustomEvent
             });
           window.dispatchEvent(customEvent);
       }
