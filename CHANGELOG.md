@@ -1,5 +1,11 @@
 # client-svg-map-ng
 
+## 0.1.24
+
+### Patch Changes
+
+- fix: change showActiveElements param to arr string
+
 ## 0.1.23
 
 ### Patch Changes

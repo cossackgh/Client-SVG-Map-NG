@@ -491,7 +491,7 @@ export class ClientSVGEditorNG{
         }
       }
     }
-    public showActiveElements = (items: DataInteractiveMA[]) => {
+    public showActiveElements = (items: string[]) => {
       this.log(this.DEBUG,"showActiveElement item",items);
       this.log(this.DEBUG,"showActiveElement this.objectBalloon",this.objectBalloon);
       if ( items !== null) {
@@ -499,7 +499,7 @@ export class ClientSVGEditorNG{
         this.hideBalloon();
         items.forEach((item) => {
 
-        const path = this.node.querySelector('#'+item.idmap)
+        const path = this.node.querySelector('#'+item)
         if (path?.tagName !== 'g') {
           (path as SVGElement).setAttribute('fill', this.options.mapTheme.colorItem.colorBGActive);
           (path as SVGElement).setAttribute('fill-opacity', this.options.mapTheme.colorItem.opacityActive);
