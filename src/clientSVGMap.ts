@@ -493,26 +493,28 @@ export class ClientSVGEditorNG{
       }
     }
     public showActiveElements = (items: string[]) => {
-      this.log(this.DEBUG,"showActiveElement item",items);
-      this.log(this.DEBUG,"showActiveElement this.objectBalloon",this.objectBalloon);
+      this.log(this.DEBUG,"showActiveElements item",items);
+      
       if ( items !== null) {
         this.clearInteractiveLayer();
         this.hideBalloon();
         items.forEach((item) => {
+          
         if ( item == null) {
             this.log(this.DEBUG,"###########  item === null",items);
             return;
           }
         const path = this.node.querySelector('#'+item)
-        if(path === undefined){
+        this.log(this.DEBUG,"###########  path",path);
+        if(path === undefined || path === null){
           this.log(this.DEBUG,"###########  path === undefined",path);
           return;
         }
         if (path?.tagName !== 'g') {
-          (path as SVGElement).setAttribute('fill', this.options.mapTheme.colorItem.colorBGActive);
-          (path as SVGElement).setAttribute('fill-opacity', this.options.mapTheme.colorItem.opacityActive);
+          (path as SVGElement)?.setAttribute('fill', this.options.mapTheme.colorItem.colorBGActive);
+          (path as SVGElement)?.setAttribute('fill-opacity', this.options.mapTheme.colorItem.opacityActive);
           
-          (path as SVGElement).setAttribute('stroke', this.options.mapTheme.borderItem.colorBorderActive);
+          (path as SVGElement)?.setAttribute('stroke', this.options.mapTheme.borderItem.colorBorderActive);
         }
         const id = path?.id
         this.log(this.DEBUG,"showActiveElements id",id);

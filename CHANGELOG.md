@@ -1,5 +1,11 @@
 # client-svg-map-ng
 
+## 0.1.27
+
+### Patch Changes
+
+- fix: fix check null path element
+
 ## 0.1.26
 
 ### Patch Changes
