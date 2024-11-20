@@ -156,6 +156,8 @@ export class ClientSVGEditorNG{
       }
       else if (item === undefined && !this.options!.isCustomBalloon) {
         this.log(this.DEBUG,"###########  item === undefined",item);
+        this.log(this.DEBUG,"###########  this.options!.isCustomBalloon",this.options!.isCustomBalloon);
+
         const signData = this.dataSigns.find((item) => item.pref === id.split('-')[0])
         this.log(this.DEBUG,"###########  signData",signData);
         this.showBalloon({title: signData?.title})
@@ -163,7 +165,10 @@ export class ClientSVGEditorNG{
       }
       else  {
         this.log(this.DEBUG,"onPathMouseOver item",item);
-        if (item !== undefined && !this.options!.isCustomBalloon ){
+        if(this.options!.isCustomBalloon) {
+          this.hideBalloon();
+        }
+        if (item !== undefined  ){
          
           this.showBalloon(item)
         }
@@ -187,6 +192,9 @@ export class ClientSVGEditorNG{
         this.log(this.DEBUG,"###########  signData",signData);
         if(!this.options!.isCustomBalloon) {
           this.showBalloon({title: signData?.title})
+        }
+        else{
+          this.hideBalloon()
         }
     }
     /**

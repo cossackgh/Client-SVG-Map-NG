@@ -1,5 +1,11 @@
 # client-svg-map-ng
 
+## 0.1.28
+
+### Patch Changes
+
+- fix: fix show custom Balloon
+
 ## 0.1.27
 
 ### Patch Changes
