@@ -1,5 +1,11 @@
 # client-svg-map-ng
 
+## 0.1.32
+
+### Patch Changes
+
+- fix: small fix invert if
+
 ## 0.1.31
 
 ### Patch Changes

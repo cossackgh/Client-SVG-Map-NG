@@ -762,7 +762,7 @@ export class ClientSVGEditorNG{
           left:0
         }
         const targetBBox = activeObj.getBoundingClientRect();
-        if (isCustomBalloon) {
+        if (!isCustomBalloon) {
           const balloonBBox = baloon.balloonDom.getBoundingClientRect();
           this.log(this.DEBUG,'setPositionBalloon balloonBBox = ',balloonBBox);
           const getWidthElement = isCustomBalloon
