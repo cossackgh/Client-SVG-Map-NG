@@ -36,7 +36,7 @@ export class ClientSVGEditorNG{
      **/
 
     constructor(private node: HTMLElement, private urlsvg: string, private dataItems: DataInteractiveMA[], private dataSigns: DataSigns[], balloon: Balloon | null = null, options: DataOptions){
-      this.log(this.DEBUG,"version = 0.1.26");
+      this.log(this.DEBUG,"version = 0.1.33");
       this.log(this.DEBUG,"constructor",node);
       this.node = node;
       this.urlsvg = urlsvg;
@@ -453,7 +453,7 @@ export class ClientSVGEditorNG{
     public showActiveElement = (item: DataInteractiveMA, showBalloon?: boolean) => {
       this.log(this.DEBUG,"showActiveElement item",item);
       this.log(this.DEBUG,"showActiveElement this.objectBalloon",this.objectBalloon);
-      if ( item !== null) {
+      if ( item !== null || item !== undefined) {
         this.clearInteractiveLayer();
         const path = this.node.querySelector('#'+item.idmap)
         if (path?.tagName !== 'g') {
@@ -466,7 +466,7 @@ export class ClientSVGEditorNG{
         this.log(this.DEBUG,"onPathMouseOver id",id);
         this.log(this.DEBUG,"########### Before item",item);
         this.setPositionBalloon(path,this.objectBalloon, this.options.isCustomBalloon)
-        if ( item == null) {
+        if ( item == null ) {
           this.log(this.DEBUG,"###########  item === null",item);
           return;
         }
